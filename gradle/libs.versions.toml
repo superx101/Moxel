@@ -1,0 +1,25 @@
+[versions]
+kotlin = "2.0.20"
+koin-bom = "4.0.0"
+koin-ksp = "1.4.0-RC4"
+ksp = "2.0.20-1.0.24"
+kotlin-logging = "7.0.0"
+log4j = "2.24.1"
+logback = "1.5.8"
+
+[plugins]
+kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin"}
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+
+[libraries]
+koin-bom = { module = "io.insert-koin:koin-bom", version.ref = "koin-bom" }
+koin-core = { module = "io.insert-koin:koin-core" }
+#koin-annotations-bom = { module = "io.insert-koin:koin-annotations-bom", version.ref = "koin-ksp" }
+koin-ksp-compiler = { module = "io.insert-koin:koin-ksp-compiler", version.ref = "koin-ksp" }
+koin-annotations-annotations = { module = "io.insert-koin:koin-annotations", version.ref = "koin-ksp" }
+kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
+kotlin-logging-common = { module = "io.github.oshai:kotlin-logging", version.ref ="kotlin-logging" }
+kotlin-logging-jvm = { module = "io.github.oshai:kotlin-logging-jvm", version.ref ="kotlin-logging" }
+kotlin-logging-wasm = { module = "io.github.oshai:kotlin-logging-wasm-js", version.ref ="kotlin-logging" }
+log4j-api = { module = "org.apache.logging.log4j:log4j-api", version.ref ="log4j" }
+logback-classic = { module = "ch.qos.logback:logback-classic", version.ref ="logback" }
