@@ -1,5 +1,16 @@
-<div align=center>
-    <img src="https://github.com/superx101/Moxel/blob/master/docs/assets/logo.png" alt="logo"/>
+<div align="center">
+    <div>
+      <img src="docs/assets/logo@2.75x.png"
+            alt="logo" 
+            style="width: 250px; image-rendering: pixelated;"
+        />
+    </div>
+    <div>
+        <img src="docs/assets/subtitle.png"
+            alt="logo" 
+            style="height: 30px;"
+        />
+    </div>
 </div>
 
-# Moxel
+
