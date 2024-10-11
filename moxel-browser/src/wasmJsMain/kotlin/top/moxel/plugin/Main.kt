@@ -2,9 +2,9 @@ package top.moxel.plugin
 
 import kotlinx.browser.document
 import kotlinx.dom.appendElement
-import top.moxel.plugin.browser.infrastructure.BrowserPlatform
+import org.koin.ksp.generated.module
+import top.moxel.plugin.browser.infrastructure.di.BrowserModules
 import top.moxel.plugin.infrastructure.di.DI
-import top.moxel.plugin.infrastructure.platform.Platform
 
 @OptIn(ExperimentalJsExport::class)
 @JsExport
@@ -33,7 +33,7 @@ fun run() {
         innerHTML = "Hello, World!"
     }
 
-    DI.addSingleton<Platform>(BrowserPlatform())
+    DI.addModule(BrowserModules().module)
     DI.startApplication()
 
     MoxelCore()

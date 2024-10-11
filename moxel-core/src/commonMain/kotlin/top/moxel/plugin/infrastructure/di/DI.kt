@@ -9,6 +9,10 @@ class DI {
     companion object {
         val moduleList = mutableListOf<Module>()
 
+        fun addModule(module: Module) {
+            moduleList.add(module)
+        }
+
         fun startApplication() {
             startKoin {
                 val parent = module {
@@ -17,10 +21,6 @@ class DI {
                 val coreModules = Modules()
                 modules(parent, coreModules.module)
             }
-        }
-
-        inline fun <reified T> addSingleton(component: T) {
-            moduleList.add(module { single<T> { component } })
         }
     }
 }

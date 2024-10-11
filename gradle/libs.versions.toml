@@ -12,11 +12,14 @@ kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref =
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 
 [libraries]
+ksp-api = {module = "com.google.devtools.ksp:symbol-processing-api", version.ref = "ksp"}
 koin-bom = { module = "io.insert-koin:koin-bom", version.ref = "koin-bom" }
 koin-core = { module = "io.insert-koin:koin-core" }
 #koin-annotations-bom = { module = "io.insert-koin:koin-annotations-bom", version.ref = "koin-ksp" }
 koin-ksp-compiler = { module = "io.insert-koin:koin-ksp-compiler", version.ref = "koin-ksp" }
 koin-annotations-annotations = { module = "io.insert-koin:koin-annotations", version.ref = "koin-ksp" }
+kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
+kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlin-logging-common = { module = "io.github.oshai:kotlin-logging", version.ref ="kotlin-logging" }
 kotlin-logging-jvm = { module = "io.github.oshai:kotlin-logging-jvm", version.ref ="kotlin-logging" }

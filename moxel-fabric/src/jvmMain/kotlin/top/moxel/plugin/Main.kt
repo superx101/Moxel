@@ -1,11 +1,11 @@
 package top.moxel.plugin
 
-import top.moxel.plugin.fabric.infrastructure.FabricPlatform
-import top.moxel.plugin.infrastructure.platform.Platform
+import org.koin.ksp.generated.module
+import top.moxel.plugin.fabric.infrastructure.di.FabricModules
 import top.moxel.plugin.infrastructure.di.DI
 
 fun main() {
-    DI.addSingleton<Platform>(FabricPlatform())
+    DI.addModule(FabricModules().module)
     DI.startApplication()
 
     MoxelCore()

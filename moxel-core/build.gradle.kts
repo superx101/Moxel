@@ -25,7 +25,7 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation(kotlin("stdlib-common"))
+                implementation(libs.kotlin.stdlib)
                 implementation(project.dependencies.platform(libs.koin.bom))
                 implementation(libs.koin.core)
                 api(libs.koin.annotations.annotations)
@@ -64,6 +64,7 @@ kotlin {
 // KSP Tasks
 dependencies {
     add("kspCommonMainMetadata", libs.koin.ksp.compiler)
+//    add("")
 }
 
 // Trigger Common Metadata Generation from Native tasks
