@@ -10,14 +10,22 @@ kotlin {
     jvm {}
 
     sourceSets {
-        val jvmMain by getting {
-            dependencies {
-                implementation(project(":moxel-core"))
+        jvmMain.dependencies {
+            implementation(project(":moxel-core"))
 
-                implementation(project.dependencies.platform(libs.koin.bom))
-                implementation(libs.koin.core)
-                api(libs.koin.annotations.annotations)
-            }
+            implementation(project.dependencies.platform(libs.koin.bom))
+            implementation(libs.koin.core)
+            api(libs.koin.annotations.annotations)
+        }
+
+        jvmTest.dependencies {
+            implementation(project(":moxel-core"))
+
+            implementation(project.dependencies.platform(libs.koin.bom))
+            implementation(libs.koin.core)
+            api(libs.koin.annotations.annotations)
+
+            implementation(libs.kotlin.test)
         }
     }
 

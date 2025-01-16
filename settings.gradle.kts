@@ -1,6 +1,7 @@
 pluginManagement {
     repositories {
         google()
+        mavenLocal()
         mavenCentral()
         gradlePluginPortal()
     }
@@ -18,8 +19,7 @@ plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version "0.5.0"
 }
 
+rootProject.name = "Moxel"
+
 include("moxel-core")
 include("moxel-fabric")
-include("moxel-browser")
-
-rootProject.name = "Moxel"

@@ -1,0 +1,5 @@
+package = org.lua
+
+headers = lua.h lualib.h lauxlib.h
+
+staticLibraries.mingw = lua52.lib

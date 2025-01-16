@@ -16,6 +16,7 @@ class I18n private constructor() {
             if (i == keys.size - 1) {
                 current[k] = value
             } else {
+                @Suppress("UNCHECKED_CAST")
                 current = current.getOrPut(k) { mutableMapOf<String, Any>() } as MutableMap<String, Any>
             }
         }
