@@ -1,10 +1,10 @@
-package top.moxel.plugin.infrastructure.script
+package top.moxel.plugin.infrastructure.extension
 
 import kotlinx.cinterop.*
 import org.lua.*
 
 @OptIn(ExperimentalForeignApi::class)
-actual class LuaEngine {
+actual class LuaScriptEngine {
     private val luaState: CPointer<cnames.structs.lua_State> =
         luaL_newstate() ?: error("Failed to create Lua state")
 
@@ -29,8 +29,8 @@ actual class LuaEngine {
             }
 
             val result = ref.get()(args.toTypedArray()) // call Kotlin function
+            pushKotlinValue(state, result)
 
-            kotlinToLua(state, result)
             return@staticCFunction 1
         }, 1)
         lua_setglobal(luaState, functionName)
@@ -38,11 +38,11 @@ actual class LuaEngine {
 
     actual fun execute(code: String): Any? {
         if (luaL_loadstring(luaState, code) != LUA_OK) {
-            error("Failed to load Lua code: ${luaToString(luaState, -1)?.toKString()}")
+            error("Failed to load Lua code: ${lua_tolstring(luaState, -1, null)?.toKString()}")
         }
 
         if (lua_pcallk(luaState, 0, LUA_MULTRET, 0, 0, null) != LUA_OK) {
-            error("Failed to run Lua code: ${luaToString(luaState, -1)?.toKString()}")
+            error("Failed to run Lua code: ${lua_tolstring(luaState, -1, null)?.toKString()}")
         }
 
         return luaToKotlin(luaState, -1)

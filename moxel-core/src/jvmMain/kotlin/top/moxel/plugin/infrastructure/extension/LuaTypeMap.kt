@@ -1,4 +1,4 @@
-package top.moxel.plugin.infrastructure.script
+package top.moxel.plugin.infrastructure.extension
 
 import org.luaj.vm2.LuaValue
 import org.luaj.vm2.Varargs

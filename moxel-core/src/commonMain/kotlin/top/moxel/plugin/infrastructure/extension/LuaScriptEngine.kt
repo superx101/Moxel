@@ -1,6 +1,6 @@
-package top.moxel.plugin.infrastructure.script
+package top.moxel.plugin.infrastructure.extension
 
-expect class LuaEngine {
+expect class LuaScriptEngine {
     /**
      * bind a Kotlin function to Lua
      */

@@ -10,7 +10,19 @@ kotlin {
     jvm()
 
     js(IR) {
-        browser()
+        moduleName = "moxel-core"
+
+        browser {
+            testTask {
+                useKarma {
+                    useChromeHeadless()
+                }
+            }
+            webpackTask {
+                mainOutputFileName = "moxel-core.js"
+                output.libraryTarget = "umd"
+            }
+        }
         binaries.executable()
     }
 

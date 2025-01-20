@@ -1,11 +1,11 @@
-package top.moxel.plugin.infrastructure.script
+package top.moxel.plugin.infrastructure.extension
 
 import org.luaj.vm2.Globals
 import org.luaj.vm2.Varargs
 import org.luaj.vm2.lib.VarArgFunction
 import org.luaj.vm2.lib.jse.JsePlatform
 
-actual class LuaEngine {
+actual class LuaScriptEngine {
     private val globals: Globals = JsePlatform.standardGlobals()
 
     actual fun bindFunction(

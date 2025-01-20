@@ -1,6 +1,5 @@
 package infrastructure
 
-import top.moxel.plugin.infrastructure.script.LuaEngine
 import kotlin.test.Test
 
 class LuaEngineTest {
