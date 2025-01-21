@@ -1,4 +1,4 @@
-package script
+package infrastructure
 
 import org.junit.Assert.assertEquals
 import top.moxel.plugin.infrastructure.extension.LuaScriptEngine

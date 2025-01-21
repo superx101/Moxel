@@ -1,39 +1,41 @@
 package top.moxel.plugin.infrastructure.io
 
-class I18n private constructor() {
-    private val translations: MutableMap<String, Any> = mutableMapOf()
+typealias I18nMap = MutableMap<String, String>
 
-    companion object {
-        val instance: I18n by lazy { I18n() }
-    }
+fun String.i18n(langCode: String, vararg replacedValues: String): String {
+    val valueString = I18nContainer.getValue(langCode, this)
 
-    fun addTranslation(key: String, value: Any) {
-        val keys = key.split(".")
-        var current = translations
-
-        for (i in keys.indices) {
-            val k = keys[i]
-            if (i == keys.size - 1) {
-                current[k] = value
-            } else {
-                @Suppress("UNCHECKED_CAST")
-                current = current.getOrPut(k) { mutableMapOf<String, Any>() } as MutableMap<String, Any>
-            }
+    val stringBuilder = StringBuilder(valueString)
+    replacedValues.forEachIndexed { index, value ->
+        val placeholder = "{$index}"
+        var startIndex = stringBuilder.indexOf(placeholder)
+        while (startIndex >= 0) {
+            stringBuilder.replaceRange(startIndex, startIndex + placeholder.length, value)
+            startIndex = stringBuilder.indexOf(placeholder, startIndex + value.length)
         }
     }
+    return stringBuilder.toString()
+}
 
-    fun getTranslation(key: String): String? {
-        val keys = key.split(".")
-        var current: Any? = translations
+object I18nContainer {
+    private val languageMap = mutableMapOf<String, I18nMap>()
 
-        for (k in keys) {
-            if (current is Map<*, *>) {
-                current = current[k]
-            } else {
-                return null
-            }
-        }
+    fun getValue(langCode: String, key: String): String {
+        return languageMap[langCode]?.get(key) as String
+    }
 
-        return current as? String
+    fun addLanguage(langCode: String, i18nMap: I18nMap) {
+        languageMap[langCode] = i18nMap
+    }
+
+    fun addLanguageByYaml(langCode: String, text: String) {
+        val yamlConverter = YamlConverter()
+        val i18nMap = yamlConverter.yaml2MutableMap(text)
+        addLanguage(langCode, i18nMap)
+    }
+
+    suspend fun loadFile(langCode: String, path: String) {
+        val text = FileLoader.loadFileAsync(path)
+        addLanguageByYaml(langCode, text)
     }
 }

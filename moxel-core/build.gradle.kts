@@ -1,7 +1,8 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
 plugins {
-    alias(libs.plugins.kotlinMultiplatform)
+    alias(libs.plugins.kotlin.multiplatform)
+    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ksp)
 }
 
@@ -39,8 +40,8 @@ kotlin {
         val main by compilations.getting
         main.cinterops.create("lua") {
             val resourceFile = project.file("src/nativeMain/resources").absolutePath
-            val includePath = file("${resourceFile}/vendored/lua/include").absolutePath
-            val libPath = file("${resourceFile}/vendored/lua").absolutePath
+            val includePath = file("${resourceFile}/lua/include").absolutePath
+            val libPath = file("${resourceFile}/lua").absolutePath
 
             defFile("${resourceFile}/cinterop/lua.def")
             compilerOpts("-I${resourceFile}")
@@ -68,6 +69,8 @@ kotlin {
 
             implementation(libs.log4j.api)
             implementation(libs.logback.classic)
+
+            implementation(libs.kaml)
         }
 
         commonTest.dependencies {

@@ -1,0 +1,12 @@
+name: Test
+version: 1.0.0
+array:
+  - a
+  - b
+  - c
+object:
+  key1: value1
+  key2:
+    - a
+    - b
+    - c

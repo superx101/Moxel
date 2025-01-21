@@ -1,7 +1,8 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
 plugins {
-    alias(libs.plugins.kotlinMultiplatform)
+    alias(libs.plugins.kotlin.multiplatform)
+    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ksp)
 }
 
@@ -13,6 +14,7 @@ kotlin {
         jvmMain.dependencies {
             implementation(project(":moxel-core"))
 
+            implementation(libs.kotlinx.coroutines.core.jvm)
             implementation(project.dependencies.platform(libs.koin.bom))
             implementation(libs.koin.core)
             api(libs.koin.annotations.annotations)

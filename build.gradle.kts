@@ -1,11 +1,6 @@
 plugins {
-    alias(libs.plugins.kotlinMultiplatform).apply(false)
+    alias(libs.plugins.kotlin.multiplatform).apply(false)
     alias(libs.plugins.ksp).apply(false)
 }
 
 group = "top.moxel.plugin"
-
-rootProject.plugins.withType<org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootPlugin> {
-    rootProject.the<org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension>().download = false
-    // "true" for default behavior
-}
