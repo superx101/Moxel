@@ -1,21 +1,21 @@
 package top.moxel.plugin.infrastructure.extension
 
 import io.github.oshai.kotlinlogging.KotlinLogging
-import top.moxel.plugin.infrastructure.environment.Environment
+import okio.Path
+import org.koin.core.annotation.Single
+import org.koin.core.component.KoinComponent
 import java.io.File
 import java.net.URLClassLoader
 import java.util.jar.JarFile
 
-actual object NativeExtensionLoader {
+@Single
+actual class NativeExtensionLoader : KoinComponent {
     private val logger = KotlinLogging.logger {}
 
-    /***
-     * Load jar file
-     */
-    actual suspend fun load(filepath: String) {
-        val jarFile = File(filepath)
+    actual fun load(path: Path) {
+        val jarFile = File(path.toString())
         if ((!jarFile.exists()) || jarFile.extension != "jar") {
-            logger.warn { "Jar file $filepath not found or not a valid JAR file." }
+            logger.warn { "Jar file $path not found or not a valid JAR file." }
             return
         }
 
@@ -45,20 +45,7 @@ actual object NativeExtensionLoader {
         }
     }
 
-    /***
-     * Load all jar files
-     */
-    actual suspend fun loadAll() {
-        val dataRoot = Environment.dataRoot
-        val extensionsFolder = File(dataRoot, "extension")
-
-        val jarFiles = extensionsFolder.listFiles { _, name -> name.endsWith(".jar") }
-        if (jarFiles != null && jarFiles.isNotEmpty()) {
-            jarFiles.forEach { jarFile ->
-                load(jarFile.name)
-            }
-        } else {
-            logger.warn { "No JAR files found in the extensions folder." }
-        }
+    actual fun loadAll() {
+        loadAllImpl(".jar")
     }
 }

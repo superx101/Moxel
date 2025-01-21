@@ -21,14 +21,14 @@ fun ignorableAssert(condition: Boolean, message: () -> String) {
 /**
  * SystemException should exit the program immediately
  */
-class SystemException(message: String) : Exception(message)
+open class SystemException(message: String) : Exception(message)
 
 /**
  * NonFatalException should be caught and handled
  */
-class NonFatalException(message: String) : Exception(message)
+open class NonFatalException(message: String) : RuntimeException(message)
 
 /**
  * IgnorableException could be ignored
  */
-class IgnorableException(message: String) : Exception(message)
+open class IgnorableException(message: String) : RuntimeException(message)

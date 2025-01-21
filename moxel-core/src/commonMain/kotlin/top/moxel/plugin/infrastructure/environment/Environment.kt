@@ -1,5 +1,7 @@
 package top.moxel.plugin.infrastructure.environment
 
+import okio.Path
+
 enum class MinecraftEdition {
     Bedrock,
     Java,
@@ -19,6 +21,6 @@ interface ModLoader {
 }
 
 interface Environment {
-    val root: String
-    val dataRoot: String
+    val root: Path
+    val dataRoot: Path
 }

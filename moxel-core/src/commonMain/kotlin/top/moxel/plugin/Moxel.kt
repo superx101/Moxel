@@ -2,10 +2,10 @@ package top.moxel.plugin
 
 import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
 import org.koin.core.module.Module
 import top.moxel.plugin.infrastructure.DI
 import top.moxel.plugin.infrastructure.extension.NativeExtensionLoader
+import top.moxel.plugin.infrastructure.io.I18nFileLoader
 import top.moxel.plugin.infrastructure.io.LoggingConfiguration
 
 class Moxel {
@@ -26,10 +26,11 @@ class Moxel {
         loadConfiguration()
         logger.debug { "Configuration loaded" }
 
-        launch {
-            NativeExtensionLoader.loadAll()
-            logger.debug { "Native extensions loaded" }
-        }.join()
+        I18nFileLoader().loadFiles()
+        logger.debug { "I18n loaded" }
+
+        NativeExtensionLoader().loadAll()
+        logger.debug { "Native extensions loaded" }
 
 //        TODO("start lua extension engine manager")
 

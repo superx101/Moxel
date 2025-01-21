@@ -33,6 +33,7 @@ kotlin {
     val nativeTarget = when {
         hostOs == "Linux" && isArm64 -> linuxArm64("native")
         isMingwX64 -> mingwX64("native")
+        hostOs == "Android" -> androidNativeArm64("native")
         else -> throw GradleException("Host OS is not supported in Kotlin/Native.")
     }
 
@@ -71,6 +72,7 @@ kotlin {
             implementation(libs.logback.classic)
 
             implementation(libs.kaml)
+            implementation(libs.okio)
         }
 
         commonTest.dependencies {
@@ -79,24 +81,16 @@ kotlin {
 
         jvmMain.dependencies {
             dependencies {
-                implementation(libs.kotlin.logging.jvm)
-                implementation(libs.kotlinx.coroutines.core.jvm)
                 implementation(libs.luaj.jse)
             }
 
         }
 
         jsMain.dependencies {
-            implementation(libs.kotlin.stdlib.js)
-            implementation(libs.kotlin.logging.js)
-            implementation(libs.kotlinx.coroutines.core.js)
-
             implementation(npm("fengari-web", "0.1.4"))
         }
 
         nativeMain.dependencies {
-            implementation(libs.kotlin.logging.mingwx64)
-//                implementation(libs.kotlin.logging.linuxarm64)
         }
     }
 
