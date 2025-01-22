@@ -16,3 +16,11 @@
 # Introduction
 
 #### Under construction, a Minecraft building tool
+
+# Support
+
+- forge
+- fabric
+- levilamina (mod edition, not plugin edition)
+- browser (a structure editor developed with Unity Web)
+- other mod loader of bedrock-edition, if any exist
