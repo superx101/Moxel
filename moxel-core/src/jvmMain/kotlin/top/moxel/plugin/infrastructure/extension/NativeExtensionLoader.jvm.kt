@@ -4,12 +4,13 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import okio.Path
 import org.koin.core.annotation.Single
 import org.koin.core.component.KoinComponent
+import top.moxel.plugin.infrastructure.NonFatalException
 import java.io.File
 import java.net.URLClassLoader
 import java.util.jar.JarFile
 
 @Single
-actual class NativeExtensionLoader : KoinComponent {
+actual open class NativeExtensionLoader : KoinComponent {
     private val logger = KotlinLogging.logger {}
 
     actual fun load(path: Path) {
@@ -38,14 +39,18 @@ actual class NativeExtensionLoader : KoinComponent {
                             "$jarFile"
                 }
             } else {
-               logger.error {"Main-Class not found in JAR manifest."  }
+                throw NonFatalException("Main-Class not found in JAR manifest.")
             }
         } catch (e: Exception) {
-            logger.error{ "Error loading or executing class from $jarFile: ${e.message}" }
+            throw NonFatalException("Error loading or executing class from $jarFile: ${e.message}")
         }
     }
 
     actual fun loadAll() {
-        loadAllImpl(".jar")
+        commonLoadAll(".jar")
+    }
+
+    actual fun freeAll() {
+        // do nothing
     }
 }

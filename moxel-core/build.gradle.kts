@@ -6,6 +6,17 @@ plugins {
     alias(libs.plugins.ksp)
 }
 
+/**
+ *  common
+ *  |-- js
+ *  |-- jvm
+ *  '-- native
+ *      |-- mingwX64
+ *      '-- unix
+ *          |-- [x] androidNativeArm64  // third-party library not fully supported
+ *          '-- linuxArm64              // possible alternative to android
+
+ */
 kotlin {
     jvmToolchain(19)
     jvm()
@@ -27,70 +38,79 @@ kotlin {
         binaries.executable()
     }
 
-    val hostOs = System.getProperty("os.name")
-    val isArm64 = System.getProperty("os.arch") == "aarch64"
-    val isMingwX64 = hostOs.startsWith("Windows")
-    val nativeTarget = when {
-        hostOs == "Linux" && isArm64 -> linuxArm64("native")
-        isMingwX64 -> mingwX64("native")
-        hostOs == "Android" -> androidNativeArm64("native")
-        else -> throw GradleException("Host OS is not supported in Kotlin/Native.")
-    }
+    listOf(
+        linuxArm64(),
+        mingwX64()
+    ).forEach {
+        it.apply {
+            val main by compilations.getting
+            main.cinterops.create("lua") {
+                val resourceFile = project.file("src/nativeMain/resources").absolutePath
+                val includePath = file("${resourceFile}/lua/include").absolutePath
+                val libPath = file("${resourceFile}/lua").absolutePath
 
-    nativeTarget.apply {
-        val main by compilations.getting
-        main.cinterops.create("lua") {
-            val resourceFile = project.file("src/nativeMain/resources").absolutePath
-            val includePath = file("${resourceFile}/lua/include").absolutePath
-            val libPath = file("${resourceFile}/lua").absolutePath
+                defFile("${resourceFile}/cinterop/lua.def")
+                compilerOpts("-I${resourceFile}")
+                includeDirs.allHeaders(includePath)
+                extraOpts("-libraryPath", libPath)
+            }
 
-            defFile("${resourceFile}/cinterop/lua.def")
-            compilerOpts("-I${resourceFile}")
-            includeDirs.allHeaders(includePath)
-            extraOpts("-libraryPath", libPath)
-        }
-
-        binaries {
-            executable {
-                entryPoint = "main"
+            binaries {
+                executable {
+                    entryPoint = "main"
+                }
             }
         }
     }
 
     sourceSets {
-        commonMain.dependencies {
-            implementation(libs.kotlin.stdlib)
-            implementation(libs.kotlin.logging.common)
+        val commonMain by getting {
+            dependencies {
+                implementation(libs.kotlin.stdlib)
+                implementation(libs.kotlin.logging.common)
 
-            implementation(libs.kotlinx.coroutines.core)
+                implementation(libs.kotlinx.coroutines.core)
 
-            implementation(project.dependencies.platform(libs.koin.bom))
-            implementation(libs.koin.core)
-            api(libs.koin.annotations.annotations)
+                implementation(project.dependencies.platform(libs.koin.bom))
+                implementation(libs.koin.core)
+                api(libs.koin.annotations.annotations)
 
-            implementation(libs.log4j.api)
-            implementation(libs.logback.classic)
+                implementation(libs.log4j.api)
+                implementation(libs.logback.classic)
 
-            implementation(libs.kaml)
-            implementation(libs.okio)
+                implementation(libs.kaml)
+                implementation(libs.okio)
+            }
+        }
+        val commonTest by getting {
+            dependencies {
+                implementation(libs.kotlin.test)
+            }
         }
 
-        commonTest.dependencies {
-            implementation(libs.kotlin.test)
-        }
-
-        jvmMain.dependencies {
+        val jvmMain by getting {
             dependencies {
                 implementation(libs.luaj.jse)
             }
-
         }
 
-        jsMain.dependencies {
-            implementation(npm("fengari-web", "0.1.4"))
+        val jsMain by getting {
+            dependencies {
+                implementation(npm("fengari-web", "0.1.4"))
+            }
         }
 
-        nativeMain.dependencies {
+        val nativeMain by creating {
+            dependsOn(commonMain)
+        }
+        val mingwX64Main by getting {
+            dependsOn(nativeMain)
+        }
+        val unixMain by creating {
+            dependsOn(nativeMain)
+        }
+        val linuxArm64Main by getting {
+            dependsOn(unixMain)
         }
     }
 

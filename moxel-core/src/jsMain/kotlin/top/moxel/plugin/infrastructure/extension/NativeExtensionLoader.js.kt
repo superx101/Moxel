@@ -4,10 +4,11 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import okio.Path
 import org.koin.core.annotation.Single
 import org.koin.core.component.KoinComponent
+import top.moxel.plugin.infrastructure.NonFatalException
 import top.moxel.plugin.infrastructure.io.FakeFile
 
 @Single
-actual class NativeExtensionLoader : KoinComponent {
+actual open class NativeExtensionLoader : KoinComponent {
     private val logger = KotlinLogging.logger {}
 
     actual fun load(path: Path) {
@@ -16,11 +17,15 @@ actual class NativeExtensionLoader : KoinComponent {
             js(code)
             logger.info { "Extension $path loaded successfully" }
         } catch (e: Exception) {
-            logger.error { "Error loading extension $path: $e" }
+            throw NonFatalException("Error loading extension $path: $e")
         }
     }
 
     actual fun loadAll() {
-        loadAllImpl(".js")
+        commonLoadAll(".js")
+    }
+
+    actual fun freeAll() {
+        // do nothing
     }
 }
