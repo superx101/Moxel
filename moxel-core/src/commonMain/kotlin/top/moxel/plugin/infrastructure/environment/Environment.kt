@@ -1,8 +1,9 @@
 package top.moxel.plugin.infrastructure.environment
 
 import okio.Path
+import top.moxel.plugin.infrastructure.SingleClass
 
-enum class MinecraftEdition {
+enum class MinecraftEditionType {
     Bedrock,
     Java,
 }
@@ -13,13 +14,15 @@ enum class PlatformTarget {
     Native,
 }
 
+@SingleClass
 interface ModLoader {
     val name: String
     val target: PlatformTarget
-    val edition: MinecraftEdition
+    val minecraftType: MinecraftEditionType
     val version: String
 }
 
+@SingleClass
 interface Environment {
     val root: Path
     val dataRoot: Path

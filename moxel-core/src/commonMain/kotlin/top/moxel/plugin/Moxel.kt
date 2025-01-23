@@ -5,7 +5,6 @@ import kotlinx.coroutines.coroutineScope
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import top.moxel.plugin.infrastructure.extension.NativeExtensionLoader
-import top.moxel.plugin.infrastructure.extension.loadAll
 import top.moxel.plugin.infrastructure.io.I18nFileLoader
 import top.moxel.plugin.infrastructure.io.LoggingConfiguration
 
@@ -31,6 +30,7 @@ class Moxel : KoinComponent {
         i18nFileLoader.loadFiles()
         logger.debug { "I18n loaded" }
 
+        // TODO test nativeExtensionLoader
         nativeExtensionLoader.loadAll()
         logger.debug { "Native extensions loaded" }
 

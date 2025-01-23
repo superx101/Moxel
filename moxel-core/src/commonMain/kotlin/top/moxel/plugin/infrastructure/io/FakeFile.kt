@@ -2,6 +2,9 @@ package top.moxel.plugin.infrastructure.io
 
 import okio.Path
 
+/**
+ * abstract file tool
+ */
 expect class FakeFile(path: Path) {
     val path: Path
 

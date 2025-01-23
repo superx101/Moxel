@@ -11,7 +11,8 @@ plugins {
  *  |-- js
  *  |-- jvm
  *  '-- native
- *      |-- mingwX64
+ *      |-- mingw
+ *      |   '-- mingwX64
  *      '-- unix
  *          |-- [x] androidNativeArm64  // third-party library not fully supported
  *          '-- linuxArm64              // possible alternative to android
@@ -73,7 +74,7 @@ kotlin {
 
                 implementation(project.dependencies.platform(libs.koin.bom))
                 implementation(libs.koin.core)
-                api(libs.koin.annotations.annotations)
+                api(libs.koin.annotations)
 
                 implementation(libs.log4j.api)
                 implementation(libs.logback.classic)
@@ -103,8 +104,11 @@ kotlin {
         val nativeMain by creating {
             dependsOn(commonMain)
         }
-        val mingwX64Main by getting {
+        val mingwMain by creating {
             dependsOn(nativeMain)
+        }
+        val mingwX64Main by getting {
+            dependsOn(mingwMain)
         }
         val unixMain by creating {
             dependsOn(nativeMain)
