@@ -11,12 +11,11 @@ plugins {
  *  |-- js
  *  |-- jvm
  *  '-- native
- *      |-- mingw
- *      |   '-- mingwX64
- *      '-- unix
- *          |-- [x] androidNativeArm64  // third-party library not fully supported
- *          '-- linuxArm64              // possible alternative to android
-
+ *      |-- mingw (mingwX64)
+ *      '-- androidNative (androidNativeArm64 or linuxArm64)
+ *
+ *  androidNativeArm64 third-party library not fully supported, use linuxArm64 replace temporarily
+ *  (koin-annotations)
  */
 kotlin {
     jvmToolchain(19)
@@ -40,8 +39,8 @@ kotlin {
     }
 
     listOf(
-        linuxArm64(),
-        mingwX64()
+        mingwX64("mingw"),
+        linuxArm64("androidNative")
     ).forEach {
         it.apply {
             val main by compilations.getting
@@ -104,17 +103,11 @@ kotlin {
         val nativeMain by creating {
             dependsOn(commonMain)
         }
-        val mingwMain by creating {
+        val mingwMain by getting {
             dependsOn(nativeMain)
         }
-        val mingwX64Main by getting {
-            dependsOn(mingwMain)
-        }
-        val unixMain by creating {
+        val androidNativeMain by getting {
             dependsOn(nativeMain)
-        }
-        val linuxArm64Main by getting {
-            dependsOn(unixMain)
         }
     }
 

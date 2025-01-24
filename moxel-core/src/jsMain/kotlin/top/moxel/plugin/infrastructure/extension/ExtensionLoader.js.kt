@@ -8,10 +8,10 @@ import top.moxel.plugin.infrastructure.NonFatalException
 import top.moxel.plugin.infrastructure.io.VirtualFile
 
 @Single
-actual open class NativeExtensionLoader : KoinComponent {
+actual open class NativeExtensionLoader : ExtensionLoader, KoinComponent {
     private val logger = KotlinLogging.logger {}
 
-    actual fun load(path: Path) {
+    actual override fun load(path: Path) {
         try {
             val code = VirtualFile(path).loadText()
             js(code)
@@ -21,11 +21,11 @@ actual open class NativeExtensionLoader : KoinComponent {
         }
     }
 
-    actual fun loadAll() {
+    actual override fun loadAll() {
         commonLoadAll(".js")
     }
 
-    actual fun freeAll() {
+    actual override fun freeAll() {
         // do nothing
     }
 }
