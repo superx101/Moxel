@@ -6,7 +6,7 @@ import org.koin.core.annotation.Single
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import top.moxel.plugin.infrastructure.environment.Environment
-import top.moxel.plugin.infrastructure.io.FakeFile
+import top.moxel.plugin.infrastructure.io.VirtualFile
 
 @Single
 expect open class NativeExtensionLoader() : KoinComponent {
@@ -31,7 +31,7 @@ internal fun NativeExtensionLoader.commonLoadAll(suffix: String) {
     val logger = KotlinLogging.logger {}
     val extensionDir = env.dataRoot.resolve("extension")
     val paths =
-        FakeFile(extensionDir).listFiles().filter { it.path.toString().endsWith(suffix) }
+        VirtualFile(extensionDir).listFiles().filter { it.path.toString().endsWith(suffix) }
     paths.forEach {
         try {
             load(it.path)

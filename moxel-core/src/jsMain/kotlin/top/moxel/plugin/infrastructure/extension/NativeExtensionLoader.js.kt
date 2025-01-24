@@ -5,7 +5,7 @@ import okio.Path
 import org.koin.core.annotation.Single
 import org.koin.core.component.KoinComponent
 import top.moxel.plugin.infrastructure.NonFatalException
-import top.moxel.plugin.infrastructure.io.FakeFile
+import top.moxel.plugin.infrastructure.io.VirtualFile
 
 @Single
 actual open class NativeExtensionLoader : KoinComponent {
@@ -13,7 +13,7 @@ actual open class NativeExtensionLoader : KoinComponent {
 
     actual fun load(path: Path) {
         try {
-            val code = FakeFile(path).loadText()
+            val code = VirtualFile(path).loadText()
             js(code)
             logger.info { "Extension $path loaded successfully" }
         } catch (e: Exception) {

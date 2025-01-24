@@ -48,14 +48,14 @@ class I18nFileLoader : KoinComponent {
     private val env by inject<Environment>()
 
     private fun loadFile(path: Path) {
-        val text = FakeFile(path).loadText()
+        val text = VirtualFile(path).loadText()
         val filename = path.name.substringBeforeLast(".")
         addLanguageByYaml(filename, text)
     }
 
     fun loadFiles() {
         val languagesDirPath = env.dataRoot.resolve("language")
-        val files = FakeFile(languagesDirPath).listFiles()
+        val files = VirtualFile(languagesDirPath).listFiles()
         files.forEach {
             loadFile(it.path)
         }

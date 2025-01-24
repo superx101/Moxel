@@ -10,7 +10,7 @@ object FilePrefix {
     const val DIR = "dir://"
 }
 
-actual class FakeFile actual constructor(actual val path: Path) {
+actual class VirtualFile actual constructor(actual val path: Path) {
     actual fun loadText(): String {
         val filePath = FilePrefix.FILE + path.toString()
         val fileContent = localStorage.getItem(filePath)
@@ -23,12 +23,12 @@ actual class FakeFile actual constructor(actual val path: Path) {
         localStorage.setItem(filePath, text)
     }
 
-    actual fun listFiles(): List<FakeFile> {
+    actual fun listFiles(): List<VirtualFile> {
         val dirPath = FilePrefix.DIR + path.toString()
         val dirContent = localStorage.getItem(dirPath)
 
         return if (dirContent != null) {
-            JSON.parse<Array<String>>(dirContent).toList().map { FakeFile(it.toPath()) }
+            JSON.parse<Array<String>>(dirContent).toList().map { VirtualFile(it.toPath()) }
         } else {
             emptyList()
         }
