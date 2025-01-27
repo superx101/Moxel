@@ -1,10 +1,12 @@
-package top.moxel.plugin.annotation
+package top.moxel.plugin.annotation.lua
 
 import io.github.oshai.kotlinlogging.KotlinLogging
 
-enum class LuaBindingGroup {
-    EXTENSION,
-    EXPRESSION
+typealias LuaBindingFunction = (Array<Any?>) -> Any?
+
+object LuaBindingGroup {
+    const val EXTENSION = "extension"
+    const val EXPRESSION = "expression"
 }
 
 /**
@@ -13,7 +15,8 @@ enum class LuaBindingGroup {
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.SOURCE)
 annotation class LuaBinding(
-    val group: LuaBindingGroup
+    val group: String,
+    val name: String = ""
 )
 
 fun checkParameters(hasVararg: Boolean, expectNumber: Int, actualNumber: Int) {

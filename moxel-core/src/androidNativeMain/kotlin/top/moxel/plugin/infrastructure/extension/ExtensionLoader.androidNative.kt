@@ -12,14 +12,14 @@ import platform.posix.dlsym
 import top.moxel.plugin.infrastructure.NonFatalException
 
 @Single
-actual open class NativeExtensionLoader : KoinComponent {
+actual open class NativeExtensionLoader : ExtensionLoader, KoinComponent {
     private val logger = KotlinLogging.logger {}
 
     @OptIn(ExperimentalForeignApi::class)
     private val handleList = mutableListOf<CPointer<out CPointed>>()
 
     @OptIn(ExperimentalForeignApi::class)
-    actual fun load(path: Path) {
+    actual override fun load(path: Path) {
         val filepath = path.toString()
         val handle =
             dlopen(filepath, RTLD_LAZY) ?: throw NonFatalException("Failed to load $filepath")
@@ -34,12 +34,12 @@ actual open class NativeExtensionLoader : KoinComponent {
         logger.info { "start extension: $filepath, successfully" }
     }
 
-    actual fun loadAll() {
+    actual override fun loadAll() {
         commonLoadAll(".so")
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    actual fun freeAll() {
+    actual override fun freeAll() {
         for (handle in handleList) {
             dlclose(handle)
         }

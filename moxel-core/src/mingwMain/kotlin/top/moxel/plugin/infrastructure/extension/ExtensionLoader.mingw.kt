@@ -12,14 +12,14 @@ import platform.windows.LoadLibraryW
 import top.moxel.plugin.infrastructure.NonFatalException
 
 @Single
-actual open class NativeExtensionLoader : KoinComponent {
+actual open class NativeExtensionLoader : ExtensionLoader, KoinComponent {
     private val logger = KotlinLogging.logger {}
 
     @OptIn(ExperimentalForeignApi::class)
     private val handleList = mutableListOf<HMODULE>()
 
     @OptIn(ExperimentalForeignApi::class)
-    actual fun load(path: Path) {
+    actual override fun load(path: Path) {
         val filepath = path.toString()
         memScoped {
             val libHandle = LoadLibraryW(filepath.wcstr.ptr.toString())
@@ -36,12 +36,12 @@ actual open class NativeExtensionLoader : KoinComponent {
         }
     }
 
-    actual fun loadAll() {
+    actual override fun loadAll() {
         commonLoadAll(".dll")
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    actual fun freeAll() {
+    actual override fun freeAll() {
         for (handle in handleList) {
             FreeLibrary(handle)
         }

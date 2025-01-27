@@ -10,10 +10,10 @@ import java.net.URLClassLoader
 import java.util.jar.JarFile
 
 @Single
-actual open class NativeExtensionLoader : KoinComponent {
+actual open class NativeExtensionLoader : ExtensionLoader, KoinComponent {
     private val logger = KotlinLogging.logger {}
 
-    actual fun load(path: Path) {
+    actual override fun load(path: Path) {
         val jarFile = File(path.toString())
         if ((!jarFile.exists()) || jarFile.extension != "jar") {
             logger.warn { "Jar file $path not found or not a valid JAR file." }
@@ -46,11 +46,11 @@ actual open class NativeExtensionLoader : KoinComponent {
         }
     }
 
-    actual fun loadAll() {
+    actual override fun loadAll() {
         commonLoadAll(".jar")
     }
 
-    actual fun freeAll() {
+    actual override fun freeAll() {
         // do nothing
     }
 }

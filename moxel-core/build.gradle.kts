@@ -1,4 +1,4 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
@@ -43,18 +43,6 @@ kotlin {
         linuxArm64("androidNative")
     ).forEach {
         it.apply {
-            val main by compilations.getting
-            main.cinterops.create("lua") {
-                val resourceFile = project.file("src/nativeMain/resources").absolutePath
-                val includePath = file("${resourceFile}/lua/include").absolutePath
-                val libPath = file("${resourceFile}/lua").absolutePath
-
-                defFile("${resourceFile}/cinterop/lua.def")
-                compilerOpts("-I${resourceFile}")
-                includeDirs.allHeaders(includePath)
-                extraOpts("-libraryPath", libPath)
-            }
-
             binaries {
                 executable {
                     entryPoint = "main"
@@ -66,6 +54,8 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
+                implementation(project(":gradle-annotations"))
+
                 implementation(libs.kotlin.stdlib)
                 implementation(libs.kotlin.logging.common)
 
@@ -114,16 +104,28 @@ kotlin {
     sourceSets.named("commonMain").configure {
         kotlin.srcDir("build/generated/ksp/metadata/commonMain/kotlin")
     }
+
+    targets.withType<KotlinNativeTarget> {
+        compilations["main"].cinterops.create("lua") {
+                val resourceFile = project.file("src/nativeMain/resources").absolutePath
+                val includePath = file("${resourceFile}/lua/include").absolutePath
+                val libPath = file("${resourceFile}/lua").absolutePath
+
+                defFile("${resourceFile}/cinterop/lua.def")
+                compilerOpts("-I${resourceFile}")
+                includeDirs.allHeaders(includePath)
+                extraOpts("-libraryPath", libPath)
+        }
+    }
 }
 
 // KSP Tasks
 dependencies {
     add("kspCommonMainMetadata", libs.koin.ksp.compiler)
+    add("kspCommonMainMetadata", project(":gradle-tools"))
 }
 
-// Trigger Common Metadata Generation from Native tasks
-project.tasks.withType(KotlinCompilationTask::class.java).configureEach {
-    if (name != "kspCommonMainKotlinMetadata") {
-        dependsOn("kspCommonMainKotlinMetadata")
-    }
+tasks.register<Copy>("copyLuaDynamicLib") {
+    from(project.file("src/nativeMain/resources/lua/lua52.dll"))
+    into(project.file("build/bin/mingw/debugTest"))
 }

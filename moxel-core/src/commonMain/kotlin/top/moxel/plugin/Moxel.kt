@@ -4,14 +4,15 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.coroutines.coroutineScope
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
-import top.moxel.plugin.infrastructure.extension.NativeExtensionLoader
+import top.moxel.plugin.infrastructure.extension.ExtensionLoaderFactory
+import top.moxel.plugin.infrastructure.extension.ExtensionType
 import top.moxel.plugin.infrastructure.io.I18nFileLoader
 import top.moxel.plugin.infrastructure.io.LoggingConfiguration
 
 class Moxel : KoinComponent {
     private val logger = KotlinLogging.logger {}
     private val i18nFileLoader by inject<I18nFileLoader>()
-    private val nativeExtensionLoader by inject<NativeExtensionLoader>()
+    private val extensionLoaderFactory by inject<ExtensionLoaderFactory>()
 
     private fun loadConfiguration() {
 //        TODO("other configurations")
@@ -31,8 +32,15 @@ class Moxel : KoinComponent {
         logger.debug { "I18n loaded" }
 
         // TODO test nativeExtensionLoader
-        nativeExtensionLoader.loadAll()
+        extensionLoaderFactory
+            .getInstance(ExtensionType.Native)
+            .loadAll()
         logger.debug { "Native extensions loaded" }
+
+        extensionLoaderFactory
+            .getInstance(ExtensionType.Lua)
+            .loadAll()
+        logger.debug { "Lua extensions loaded" }
 
 //        TODO("start lua extension engine manager")
 
@@ -42,6 +50,6 @@ class Moxel : KoinComponent {
     }
 
     suspend fun stop() = coroutineScope {
-        nativeExtensionLoader.freeAll()
+        extensionLoaderFactory.getAllInstance().forEach { it.freeAll() }
     }
 }

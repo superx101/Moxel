@@ -3,14 +3,15 @@ package top.moxel.plugin.infrastructure.extension
 import cnames.structs.lua_State
 import kotlinx.cinterop.*
 import org.lua.*
+import top.moxel.plugin.annotation.lua.LuaBindingFunction
 
 @OptIn(ExperimentalForeignApi::class)
-inline fun luaUpValueIndex(i: Int): Int {
+internal inline fun luaUpValueIndex(i: Int): Int {
     return LUA_REGISTRYINDEX - i
 }
 
 @OptIn(ExperimentalForeignApi::class)
-fun luaToKotlin(luaState: CPointer<lua_State>?, index: Int): Any? {
+internal fun luaToKotlin(luaState: CPointer<lua_State>?, index: Int): Any? {
     return when (lua_type(luaState, index)) {
         LUA_TNUMBER -> lua_tonumberx(luaState, index, null)
         LUA_TSTRING -> lua_tolstring(luaState, index, null)?.toKString()
@@ -21,7 +22,7 @@ fun luaToKotlin(luaState: CPointer<lua_State>?, index: Int): Any? {
 }
 
 @OptIn(ExperimentalForeignApi::class)
-fun pushKotlinValue(luaState: CPointer<lua_State>?, value: Any?) {
+internal fun pushKotlinValue(luaState: CPointer<lua_State>?, value: Any?) {
     when (value) {
         is Number -> lua_pushnumber(luaState, value.toDouble())
         is String -> lua_pushstring(luaState, value)
@@ -32,9 +33,9 @@ fun pushKotlinValue(luaState: CPointer<lua_State>?, value: Any?) {
 }
 
 @OptIn(ExperimentalForeignApi::class)
-actual class LuaScriptEngine {
+actual open class LuaEngine {
     private var luaState: CPointer<lua_State> = createState()
-    private val refList = mutableListOf<Pair<String, StableRef<(Array<Any?>) -> Any?>>>()
+    private val fnStableRefList = mutableListOf<Pair<String, StableRef<LuaBindingFunction>>>()
 
     private inline fun createState(): CPointer<lua_State> {
         val state = luaL_newstate() ?: error("Failed to create Lua state")
@@ -42,33 +43,38 @@ actual class LuaScriptEngine {
         return state
     }
 
-    private fun bindFunctionRef(functionName: String, funcRef: StableRef<(Array<Any?>) -> Any?>) {
-        lua_pushlightuserdata(luaState, funcRef.asCPointer())
-        lua_pushcclosure(luaState, staticCFunction { state ->
-            // get Kotlin function from StableRef
-            val ref =
-                lua_touserdata(state, luaUpValueIndex(1))?.asStableRef<(Array<Any?>) -> Any?>()
+    private fun bindLuaStableRef(functionName: String, ref: StableRef<LuaBindingFunction>) {
+        lua_pushlightuserdata(luaState, ref.asCPointer())
+        val luaCFunction = staticCFunction(
+            fun(state: CPointer<lua_State>?): Int {
+                val args = mutableListOf<Any?>()
+                val argCount = lua_gettop(state)
+                for (i in 1..argCount) {
+                    args.add(luaToKotlin(state, i))
+                }
+
+                // call Kotlin function
+                val fnRef = lua_touserdata(state, luaUpValueIndex(1))
+                    ?.asStableRef<LuaBindingFunction>()
                     ?: error("Failed to get Kotlin function")
+                val fn = fnRef.get()
+                val result = fn(args.toTypedArray())
+                pushKotlinValue(state, result)
 
-            val args = mutableListOf<Any?>()
-            val argCount = lua_gettop(state)
-            for (i in 1..argCount) {
-                args.add(luaToKotlin(state, i))
+                return 1
             }
+        )
 
-            // call Kotlin function
-            val result = ref.get()(args.toTypedArray())
-            pushKotlinValue(state, result)
-
-            return@staticCFunction 1
-        }, 1)
+        // #define lua_pushcfunction(L,f)	lua_pushcclosure(L, (f), 0)
+        lua_pushcclosure(luaState, luaCFunction, 1)
         lua_setglobal(luaState, functionName)
     }
 
-    actual fun bindFunction(functionName: String, function: (Array<Any?>) -> Any?) {
-        val funcRef = StableRef.create(function)
-        bindFunctionRef(functionName, funcRef)
-        refList.add(Pair(functionName, funcRef))
+    actual fun bindFunction(functionName: String, function: LuaBindingFunction) {
+        val stableRef = StableRef.create(function)
+        bindLuaStableRef(functionName, stableRef)
+
+        fnStableRefList.add(functionName to stableRef)
     }
 
     actual fun execute(code: String): Any? {
@@ -86,15 +92,15 @@ actual class LuaScriptEngine {
         lua_close(luaState)
         luaState = createState()
 
-        for (ref in refList) {
-            bindFunctionRef(ref.first, ref.second)
+        for (ref in fnStableRefList) {
+            bindLuaStableRef(ref.first, ref.second)
         }
     }
 
     actual fun close() {
-        for (ref in refList) {
+        lua_close(luaState)
+        for (ref in fnStableRefList) {
             ref.second.dispose()
         }
-        lua_close(luaState)
     }
 }
