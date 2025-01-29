@@ -12,6 +12,6 @@ class LuaEngineTest {
         luaEngine.bindFunction("f") {
             args -> (args[0] as Double + args[1] as Double)
         }
-        assertEquals(3.0, luaEngine.execute("return f(1, 2)"))
+        assertEquals(3.0, luaEngine.eval("return f(1, 2)"))
     }
 }

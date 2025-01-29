@@ -4,9 +4,22 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 
 typealias LuaBindingFunction = (Array<Any?>) -> Any?
 
-object LuaBindingGroup {
-    const val EXTENSION = "extension"
-    const val EXPRESSION = "expression"
+data class LuaBinding(val name: String, val function: LuaBindingFunction)
+
+data class LuaLibDeclaration(
+    val type: LuaEngineType,
+    val group: String,
+    val bindings: List<LuaBinding>
+)
+
+//object LuaEngineType {
+//    const val EXTENSION = "extension"
+//    const val SCRIPT = "script"
+//}
+
+enum class LuaEngineType {
+    EXTENSION,
+    SCRIPT
 }
 
 /**
@@ -14,13 +27,14 @@ object LuaBindingGroup {
  */
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.SOURCE)
-annotation class LuaBinding(
-    val group: String,
+annotation class LuaLibFunction(
+    val type: LuaEngineType,
+    val group: String = "",
     val name: String = ""
 )
 
 fun checkParameters(hasVararg: Boolean, expectNumber: Int, actualNumber: Int) {
-    if(hasVararg)
+    if (hasVararg)
         return
     if (expectNumber == actualNumber)
         return

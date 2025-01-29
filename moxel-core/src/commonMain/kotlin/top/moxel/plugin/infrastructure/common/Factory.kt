@@ -1,5 +1,5 @@
 package top.moxel.plugin.infrastructure.common
 
-interface StaticFactory<T, R> {
+interface AbstractFactory<T, R> {
     fun getInstance(type: T): R
 }

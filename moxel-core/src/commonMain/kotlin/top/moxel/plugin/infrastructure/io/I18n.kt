@@ -4,20 +4,24 @@ import okio.Path
 import org.koin.core.annotation.Single
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import top.moxel.plugin.annotation.lua.LuaEngineType
+import top.moxel.plugin.annotation.lua.LuaLibFunction
 import top.moxel.plugin.infrastructure.environment.Environment
 import top.moxel.plugin.infrastructure.io.I18nContainer.addLanguageByYaml
 
-typealias I18nMap = MutableMap<String, String>
 
 object I18nContainer {
-    private val languageMap = mutableMapOf<String, I18nMap>()
+    private val languageMap = mutableMapOf<String, MutableMap<String, String>>()
 
     fun getValue(langCode: String, key: String): String {
         return languageMap[langCode]?.get(key) as String
     }
 
-    fun addLanguage(langCode: String, i18nMap: I18nMap) {
-        languageMap[langCode] = i18nMap
+    fun addLanguage(langCode: String, i18nMap: Map<String, String>) {
+        val mutableMap = languageMap[langCode] ?: mutableMapOf()
+        i18nMap.forEach { (key, value) ->
+            mutableMap[key] = value
+        }
     }
 
     fun addLanguageByYaml(langCode: String, text: String) {
@@ -61,3 +65,7 @@ class I18nFileLoader : KoinComponent {
         }
     }
 }
+
+@LuaLibFunction(type = LuaEngineType.EXTENSION, group = "i18n")
+fun addLanguage(langCode: String, i18nMap: Map<String, String>) =
+    I18nContainer.addLanguage(langCode, i18nMap)

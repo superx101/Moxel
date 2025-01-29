@@ -5,10 +5,11 @@ import okio.Path
 import org.koin.core.annotation.Single
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import top.moxel.plugin.annotation.lua.LuaEngineType
+import top.moxel.plugin.infrastructure.common.AbstractFactory
 import top.moxel.plugin.infrastructure.environment.Environment
 import top.moxel.plugin.infrastructure.environment.ResourceManager
 import top.moxel.plugin.infrastructure.io.VirtualFile
-import top.moxel.plugin.infrastructure.common.StaticFactory
 
 interface ExtensionLoader {
     /**
@@ -29,14 +30,14 @@ interface ExtensionLoader {
 
 @Single
 class LuaExtensionLoader : ExtensionLoader, KoinComponent {
-    private val engine by inject<LuaExtensionEngine>()
+    private val manager by inject<LuaEngineManager>()
     private val resources by inject<ResourceManager>()
     private val logger = KotlinLogging.logger {}
 
     override fun load(path: Path) {
         val code = VirtualFile(path).loadText()
-        engine.newState()
-        engine.execute(code)
+        val engine = manager.getOrCreate(LuaEngineId(LuaEngineType.EXTENSION, path.name))
+        engine.eval(code)
     }
 
     override fun loadAll() {
@@ -54,7 +55,7 @@ class LuaExtensionLoader : ExtensionLoader, KoinComponent {
     }
 
     override fun freeAll() {
-        engine.close()
+        manager.disposeExtensions()
         logger.debug { "Lua extension closed" }
     }
 }
@@ -87,7 +88,7 @@ enum class ExtensionType {
 }
 
 @Single
-class ExtensionLoaderFactory : StaticFactory<ExtensionType, ExtensionLoader>, KoinComponent {
+class ExtensionLoaderFactory : AbstractFactory<ExtensionType, ExtensionLoader>, KoinComponent {
     private val nativeLoader by inject<NativeExtensionLoader>()
     private val luaLoader by inject<LuaExtensionLoader>()
 

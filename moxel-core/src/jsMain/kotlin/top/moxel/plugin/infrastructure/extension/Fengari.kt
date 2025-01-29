@@ -10,8 +10,14 @@ external object lua {
 
     val LUA_TNIL: Int
     val LUA_TBOOLEAN: Int
+    val LUA_TLIGHTUSERDATA: Int
     val LUA_TNUMBER: Int
     val LUA_TSTRING: Int
+    val LUA_TTABLE: Int
+    val LUA_TFUNCTION: Int
+    val LUA_TUSERDATA: Int
+    val LUA_TTHREAD: Int
+    val LUA_NUMTAGS: Int
 
     val LUA_MULTRET: Int
 
@@ -26,11 +32,22 @@ external object lua {
     fun lua_pushnil(L: LuaState)
 
     fun lua_pushcfunction(L: LuaState, f: (LuaState) -> Int)
+    fun lua_touserdata(L: LuaState, index: Int): dynamic
+    fun lua_getglobal(L: LuaState, name: String)
     fun lua_setglobal(L: LuaState, name: String)
     fun lua_gettop(L: LuaState): Int
+    fun lua_newtable(L: LuaState)
+    fun lua_setfield(L: LuaState, index: Int, k: String)
     fun lua_pcall(L: LuaState, nargs: Int, nresults: Int, errfunc: Int): Int
+    fun lua_settop(L: LuaState, index: Int)
     fun lua_pop(L: LuaState, n: Int)
     fun lua_close(L: LuaState)
+    fun lua_topointer(luaState: LuaState, index: Int): dynamic
+    fun lua_next(luaState: LuaState, index: Int): Int
+    fun lua_tothread(luaState: LuaState, index: Int): dynamic
+    fun lua_pushlightuserdata(luaState: LuaState, value: Any)
+    fun lua_createtable(luaState: LuaState, i: Int, i1: Int)
+    fun lua_settable(luaState: LuaState, i: Int)
 }
 
 external object lauxlib {

@@ -14,8 +14,8 @@ class LuaEngineTest {
             val b = args[1] as Int
             a * b
         }
-        assertEquals("function", luaEngine.execute("return type(f)"))
-        assertEquals(10.0, luaEngine.execute("return f(2, 5)"))
+        assertEquals("function", luaEngine.eval("return type(f)"))
+        assertEquals(10.0, luaEngine.eval("return f(2, 5)"))
         luaEngine.close()
     }
 }

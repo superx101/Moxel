@@ -18,6 +18,10 @@ plugins {
  *  (koin-annotations)
  */
 kotlin {
+    compilerOptions {
+        freeCompilerArgs.add("-Xexpect-actual-classes")
+    }
+
     jvmToolchain(19)
     jvm()
 
