@@ -14,11 +14,9 @@ import top.moxel.plugin.infrastructure.common.ActualWrapper
 
 actual typealias LuaCFunctionRef = LuaCFunctionWrapper
 
-class LuaCFunctionWrapper(
-    override var value: VarArgFunction
-) : ActualWrapper<VarArgFunction>
+class LuaCFunctionWrapper(override var value: VarArgFunction) : ActualWrapper<VarArgFunction>
 
-actual open class LuaEngine {
+actual open class LuaEngine actual constructor() {
     private var globals: Globals = JsePlatform.standardGlobals()
 
     actual companion object {
@@ -66,14 +64,14 @@ actual open class LuaEngine {
     }
 
     actual fun newLib(lib: LuaLib) {
-        if(lib.isGlobal) {
-            for(luaLibFun in lib.luaLibFunctions)
+        if (lib.isGlobal) {
+            for (luaLibFun in lib.luaLibFunctions)
                 globals.set(luaLibFun.name, luaLibFun.luaCFunctionRef.value)
             return
         }
 
         var table = globals.get(lib.name)
-        if(table.isnil()) {
+        if (table.isnil()) {
             table = LuaTable()
         }
         table as LuaTable
@@ -98,4 +96,3 @@ actual open class LuaEngine {
         globals.get("collectgarbage")?.call()
     }
 }
-

@@ -9,7 +9,7 @@ import top.moxel.plugin.infrastructure.common.ActualWrapper
 
 @OptIn(ExperimentalForeignApi::class)
 data class LuaCFunctionWrapper(
-    override var value: StableRef<lua_CFunction>
+    override var value: StableRef<lua_CFunction>,
 ) : ActualWrapper<StableRef<lua_CFunction>>
 
 @OptIn(ExperimentalForeignApi::class)
@@ -26,8 +26,8 @@ actual open class LuaEngine {
             return LUA_REGISTRYINDEX - i
         }
 
-        internal inline fun luaPop(luaState: CPointer<lua_State>,  i: Int) {
-            lua_settop(luaState, -i-1)
+        internal inline fun luaPop(luaState: CPointer<lua_State>, i: Int) {
+            lua_settop(luaState, -i - 1)
         }
 
         @OptIn(ExperimentalForeignApi::class)
@@ -57,13 +57,13 @@ actual open class LuaEngine {
                     }
                     map
                 }
-                LUA_TFUNCTION ->{
+                LUA_TFUNCTION -> {
                     TODO()
                 }
                 LUA_TUSERDATA -> {
                     TODO()
                 }
-                LUA_TTHREAD ->{
+                LUA_TTHREAD -> {
                     TODO()
                 }
                 else -> error("Unsupported Lua type: ${lua_type(luaState, index)}")
@@ -126,7 +126,7 @@ actual open class LuaEngine {
     }
 
     actual fun newLib(lib: LuaLib) {
-        if(lib.isGlobal) {
+        if (lib.isGlobal) {
             for (luaLibFun in lib.luaLibFunctions) {
                 val fnRef = luaLibFun.luaCFunctionRef.value
                 lua_pushlightuserdata(luaState, fnRef.asCPointer())

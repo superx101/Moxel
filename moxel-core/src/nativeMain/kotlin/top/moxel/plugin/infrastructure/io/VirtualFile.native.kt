@@ -15,8 +15,6 @@ actual class VirtualFile actual constructor(actual val path: Path) {
         sink.buffer().writeUtf8(text)
     }
 
-    actual fun listFiles(): List<VirtualFile> {
-        return FileSystem.SYSTEM.list(path)
-            .map { VirtualFile(it) }
-    }
+    actual fun listFiles(): List<VirtualFile> = FileSystem.SYSTEM.list(path)
+        .map { VirtualFile(it) }
 }

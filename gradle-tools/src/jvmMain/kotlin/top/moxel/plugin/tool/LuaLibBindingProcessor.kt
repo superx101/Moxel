@@ -11,11 +11,12 @@ import top.moxel.plugin.annotation.lua.LuaLibDeclaration
 
 class LuaLibBindingProcessor(
     private val logger: KSPLogger,
-    private val codeGenerator: CodeGenerator
+    private val codeGenerator: CodeGenerator,
 ) : SymbolProcessor {
-    private val listType = List::class.asTypeName().parameterizedBy(
-        LuaLibDeclaration::class.asTypeName()
-    )
+    private val listType =
+        List::class.asTypeName().parameterizedBy(
+            LuaLibDeclaration::class.asTypeName(),
+        )
     private val annotationPackageName = "top.moxel.plugin.annotation.lua"
     private val annotationName = "LuaLibFunction"
     private val packageName = "top.moxel.plugin.ksp.generated"
@@ -26,50 +27,55 @@ class LuaLibBindingProcessor(
         val callName = symbol.simpleName.asString()
         val parameters = symbol.parameters
         val hasVararg = parameters.lastOrNull()?.isVararg == true
-        val paramAccess = parameters.mapIndexed { index, value ->
-            val resolvedType = value.type.resolve()
-            val type = StringBuilder()
-            type.append(value.type)
-            if (resolvedType.arguments.isNotEmpty()) {
-                type.append("<")
-                type.append(resolvedType.arguments.joinToString(", ") { arg ->
-                    arg.type?.resolve()?.declaration?.qualifiedName?.asString() ?: "*"
-                })
-                type.append(">")
-            }
+        val paramAccess =
+            parameters.mapIndexed { index, value ->
+                val resolvedType = value.type.resolve()
+                val type = StringBuilder()
+                type.append(value.type)
+                if (resolvedType.arguments.isNotEmpty()) {
+                    type.append("<")
+                    type.append(
+                        resolvedType.arguments.joinToString(", ") { arg ->
+                            arg.type?.resolve()?.declaration?.qualifiedName?.asString() ?: "*"
+                        },
+                    )
+                    type.append(">")
+                }
 
-            "it[$index] as $type"
-        }.joinToString(", ")
+                "it[$index] as $type"
+            }.joinToString(", ")
 
-        val customName = symbol.annotations
-            .find { it.shortName.asString() == annotationName }?.arguments
-            ?.find { it.name?.asString() == "name" }?.value as String?
-            ?: callName
+        val customName =
+            symbol.annotations
+                .find { it.shortName.asString() == annotationName }?.arguments
+                ?.find { it.name?.asString() == "name" }?.value as String?
+                ?: callName
 
         codeBuilder.add(
             """
-                $annotationPackageName.LuaBinding("${customName.ifEmpty { callName }}") { 
-                    $annotationPackageName.checkParameters($hasVararg, ${parameters.size}, it.size);
-                    ${symbol.packageName.asString()}.$callName($paramAccess);
-                },
-                
-            """.trimIndent()
+            $annotationPackageName.LuaBinding("${customName.ifEmpty { callName }}") { 
+                $annotationPackageName.checkParameters($hasVararg, ${parameters.size}, it.size);
+                ${symbol.packageName.asString()}.$callName($paramAccess);
+            },
+            
+            """.trimIndent(),
         )
     }
 
     private fun generateBindingDeclarationList(
-        groupedSymbols: Map<Pair<LuaEngineType, String>, List<KSFunctionDeclaration>>
+        groupedSymbols: Map<Pair<LuaEngineType, String>, List<KSFunctionDeclaration>>,
     ) {
-        val codeBuilder = CodeBlock
-            .builder()
-            .addStatement("listOf (")
-            .indent()
+        val codeBuilder =
+            CodeBlock
+                .builder()
+                .addStatement("listOf (")
+                .indent()
 
         groupedSymbols.forEach { (pair, list) ->
             codeBuilder.addStatement("$annotationPackageName.LuaLibDeclaration(")
                 .indent()
                 .addStatement(
-                    "$annotationPackageName.LuaEngineType.${pair.first.name.uppercase()},"
+                    "$annotationPackageName.LuaEngineType.${pair.first.name.uppercase()},",
                 )
                 .addStatement("\"${pair.second}\",")
                 .addStatement("listOf(")
@@ -89,23 +95,24 @@ class LuaLibBindingProcessor(
         objectBuilder.addProperty(
             PropertySpec.builder(
                 "list",
-                listType
+                listType,
             )
                 .initializer(codeBuilder.build())
-                .build()
+                .build(),
         )
     }
 
     private fun writeToFile() {
-        val builder = FileSpec
-            .builder(packageName, className)
-            .addType(objectBuilder.build())
-            .build()
+        val builder =
+            FileSpec
+                .builder(packageName, className)
+                .addType(objectBuilder.build())
+                .build()
         codeGenerator.createNewFile(
             Dependencies(aggregating = false),
             packageName,
             className,
-            "kt"
+            "kt",
         ).writer().use { output ->
             builder.writeTo(output)
         }
@@ -117,16 +124,18 @@ class LuaLibBindingProcessor(
                 .getSymbolsWithAnnotation("$annotationPackageName.$annotationName")
                 .filterIsInstance<KSFunctionDeclaration>()
 
-        val groupedSymbols = symbols.groupBy { symbol ->
-            val arguments = symbol.annotations
-                .find { it.shortName.asString() == annotationName }?.arguments!!
+        val groupedSymbols =
+            symbols.groupBy { symbol ->
+                val arguments =
+                    symbol.annotations
+                        .find { it.shortName.asString() == annotationName }?.arguments!!
 
-            val ksType = arguments.find { it.name?.asString() == "type" }!!.value as KSType
-            val type = LuaEngineType.valueOf(ksType.declaration.simpleName.asString())
-            val group = arguments.find { it.name?.asString() == "group" }?.value as String? ?: ""
+                val ksType = arguments.find { it.name?.asString() == "type" }!!.value as KSType
+                val type = LuaEngineType.valueOf(ksType.declaration.simpleName.asString())
+                val group = arguments.find { it.name?.asString() == "group" }?.value as String? ?: ""
 
-            Pair(type, group)
-        }
+                Pair(type, group)
+            }
         generateBindingDeclarationList(groupedSymbols)
         writeToFile()
 

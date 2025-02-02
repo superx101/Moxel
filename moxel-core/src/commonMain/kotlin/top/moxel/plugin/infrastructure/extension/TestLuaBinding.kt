@@ -8,16 +8,10 @@ import top.moxel.plugin.annotation.lua.LuaLibFunction
  */
 
 @LuaLibFunction(type = LuaEngineType.EXTENSION, group = "mt")
-fun test(a: Int, b: Int): Int {
-    return a * b
-}
+fun test(a: Int, b: Int): Int = a * b
 
 @LuaLibFunction(type = LuaEngineType.EXTENSION, group = "mt")
-fun test2(a: Int, b: Int, c: Double): Int {
-    return a * b + c.toInt()
-}
+fun test2(a: Int, b: Int, c: Double): Int = a * b + c.toInt()
 
 @LuaLibFunction(type = LuaEngineType.SCRIPT)
-fun test3(vararg str: String): String {
-    return str[0]
-}
+fun test3(vararg str: String): String = str[0]

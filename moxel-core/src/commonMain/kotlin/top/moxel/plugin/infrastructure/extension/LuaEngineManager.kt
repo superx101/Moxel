@@ -22,8 +22,8 @@ class LuaEngineManager {
             LuaLib(
                 definition.group,
                 LuaEngine.buildLuaFunctions(definition.bindings),
-                definition.group.isBlank()
-            )
+                definition.group.isBlank(),
+            ),
         )
         libsMap[definition.type] = list
     }
@@ -48,8 +48,8 @@ class LuaEngineManager {
     }
 
     fun disposeExtensions() {
-        engineMap.forEach { (id, value)->
-            if(id.type == LuaEngineType.EXTENSION) {
+        engineMap.forEach { (id, value) ->
+            if (id.type == LuaEngineType.EXTENSION) {
                 value.close()
                 delete(id)
             }
@@ -58,7 +58,7 @@ class LuaEngineManager {
     }
 
     fun disposeMemory() {
-        engineMap.forEach { (id, value)->
+        engineMap.forEach { (id, value) ->
             value.close()
             delete(id)
         }

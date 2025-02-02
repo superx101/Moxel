@@ -8,7 +8,7 @@ import org.koin.ksp.generated.module
 /**
  * Indicates that the current interface will be implemented by subproject, as singleton
  */
-annotation class SingleClass()
+annotation class SingleClass
 
 object DI {
     private val moduleList = mutableListOf<Module>()
@@ -19,9 +19,10 @@ object DI {
 
     fun startApplication() {
         startKoin {
-            val parent = module {
-                includes(moduleList)
-            }
+            val parent =
+                module {
+                    includes(moduleList)
+                }
             modules(parent, Modules().module)
         }
     }

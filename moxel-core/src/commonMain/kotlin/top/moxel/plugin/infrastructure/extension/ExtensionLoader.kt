@@ -11,7 +11,7 @@ import top.moxel.plugin.infrastructure.io.VirtualFile
 
 enum class ExtensionType {
     Native,
-    Lua
+    Lua,
 }
 
 interface ExtensionLoader {
@@ -32,9 +32,13 @@ interface ExtensionLoader {
 }
 
 @Single
-expect class NativeExtensionLoader() : ExtensionLoader, KoinComponent {
+expect class NativeExtensionLoader :
+    ExtensionLoader,
+    KoinComponent {
     override fun loadAll()
+
     override fun load(path: Path)
+
     override fun freeAll()
 }
 

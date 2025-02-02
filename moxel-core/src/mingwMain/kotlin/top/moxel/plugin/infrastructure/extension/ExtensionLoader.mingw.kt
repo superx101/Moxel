@@ -9,7 +9,6 @@ import platform.windows.FreeLibrary
 import platform.windows.GetProcAddress
 import platform.windows.HMODULE
 import platform.windows.LoadLibraryW
-import top.moxel.plugin.infrastructure.NonFatalException
 
 @Single
 actual open class NativeExtensionLoader : ExtensionLoader, KoinComponent {
@@ -23,11 +22,10 @@ actual open class NativeExtensionLoader : ExtensionLoader, KoinComponent {
         val filepath = path.toString()
         memScoped {
             val libHandle = LoadLibraryW(filepath.wcstr.ptr.toString())
-                ?: throw NonFatalException("Failed to load $filepath")
+                ?: error("Failed to load $filepath")
 
-            val funcPtr = GetProcAddress(libHandle, "onStart") ?: throw NonFatalException(
-                "Failed to load function onStart in $filepath"
-            )
+            val funcPtr = GetProcAddress(libHandle, "onStart")
+                ?: error("Failed to load function onStart in $filepath")
             val func = funcPtr.reinterpret<CFunction<() -> Unit>>()
             func.invoke()
 

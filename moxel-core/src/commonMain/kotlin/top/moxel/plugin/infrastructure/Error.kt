@@ -5,10 +5,7 @@ package top.moxel.plugin.infrastructure
  */
 open class SystemException(message: String) : Exception(message)
 
-/**
- * NonFatalException should be caught and handled
- */
-open class NonFatalException(message: String) : RuntimeException(message)
+open class WarningException(message: String) : SystemException(message)
 
 fun systemAssert(condition: Boolean, message: () -> String) {
     if (condition) {
@@ -16,8 +13,4 @@ fun systemAssert(condition: Boolean, message: () -> String) {
     }
 }
 
-fun nonFatalAssert(condition: Boolean, message: () -> String) {
-    if (condition) {
-        throw NonFatalException(message())
-    }
-}
+fun warning(message: () -> String): Unit = throw WarningException(message())

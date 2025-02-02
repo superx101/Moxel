@@ -9,11 +9,12 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 object TestLibs {
-    val mathLib = listOf(
-        LuaBinding("add") { args -> args[0] as Double + args[1] as Double },
-        LuaBinding("sub") { args -> args[0] as Double - args[1] as Double },
-        LuaBinding("mul") { args -> args[0] as Double * args[1] as Double }
-    )
+    val mathLib =
+        listOf(
+            LuaBinding("add") { args -> args[0] as Double + args[1] as Double },
+            LuaBinding("sub") { args -> args[0] as Double - args[1] as Double },
+            LuaBinding("mul") { args -> args[0] as Double * args[1] as Double },
+        )
 }
 
 abstract class LuaEngineTest {
@@ -26,8 +27,8 @@ abstract class LuaEngineTest {
             LuaLibDeclaration(
                 LuaEngineType.SCRIPT,
                 "mymath",
-                TestLibs.mathLib
-            )
+                TestLibs.mathLib,
+            ),
         )
         val engine = manager.getOrCreate(LuaEngineId(LuaEngineType.SCRIPT, "TestEngine"))
 

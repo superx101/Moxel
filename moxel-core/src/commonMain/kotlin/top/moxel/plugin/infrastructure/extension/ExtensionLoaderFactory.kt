@@ -10,14 +10,10 @@ class ExtensionLoaderFactory : AbstractFactory<ExtensionType, ExtensionLoader>, 
     private val nativeLoader by inject<NativeExtensionLoader>()
     private val luaLoader by inject<LuaExtensionLoader>()
 
-    override fun getInstance(type: ExtensionType): ExtensionLoader {
-        return when (type) {
-            ExtensionType.Native -> nativeLoader
-            ExtensionType.Lua -> luaLoader
-        }
+    override fun getInstance(type: ExtensionType): ExtensionLoader = when (type) {
+        ExtensionType.Native -> nativeLoader
+        ExtensionType.Lua -> luaLoader
     }
 
-    fun getAllInstance(): List<ExtensionLoader> {
-        return listOf(nativeLoader, luaLoader)
-    }
+    fun getAllInstance(): List<ExtensionLoader> = listOf(nativeLoader, luaLoader)
 }

@@ -9,12 +9,12 @@ data class LuaBinding(val name: String, val function: LuaBindingFunction)
 data class LuaLibDeclaration(
     val type: LuaEngineType,
     val group: String,
-    val bindings: List<LuaBinding>
+    val bindings: List<LuaBinding>,
 )
 
 enum class LuaEngineType {
     EXTENSION,
-    SCRIPT
+    SCRIPT,
 }
 
 /**
@@ -25,18 +25,20 @@ enum class LuaEngineType {
 annotation class LuaLibFunction(
     val type: LuaEngineType,
     val group: String = "",
-    val name: String = ""
+    val name: String = "",
 )
 
 fun checkParameters(hasVararg: Boolean, expectNumber: Int, actualNumber: Int) {
-    if (hasVararg)
+    if (hasVararg) {
         return
-    if (expectNumber == actualNumber)
+    }
+    if (expectNumber == actualNumber) {
         return
+    }
 
     val logger = KotlinLogging.logger {}
     logger.error {
         "The number of parameters does not match, " +
-                "expected to be $expectNumber but actually $actualNumber"
+            "expected to be $expectNumber but actually $actualNumber"
     }
 }

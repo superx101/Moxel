@@ -8,12 +8,12 @@ import top.moxel.plugin.infrastructure.common.ActualWrapper
 typealias LuaCFunction = (LuaState) -> Int
 
 data class LuaCFunctionWrapper(
-    override var value: LuaCFunction
+    override var value: LuaCFunction,
 ) : ActualWrapper<LuaCFunction>
 
 actual typealias LuaCFunctionRef = LuaCFunctionWrapper
 
-actual open class LuaEngine {
+actual open class LuaEngine actual constructor() {
     private val logger = KotlinLogging.logger {}
     private var luaState = createState()
 
@@ -112,7 +112,7 @@ actual open class LuaEngine {
                 val luaCFunction = createLuaCFunction(it.function)
                 LuaLibFunction(
                     it.name,
-                    LuaCFunctionRef(luaCFunction)
+                    LuaCFunctionRef(luaCFunction),
                 )
             }
         }
@@ -161,22 +161,23 @@ actual open class LuaEngine {
             error(
                 "Failed to run Lua code: ${
                     to_jsstring(lua.lua_tostring(luaState, -1))
-                }"
+                }",
             )
         }
 
         val returnValues = mutableListOf<Any?>()
-        val result = when (val returnCount = lua.lua_gettop(luaState)) {
-            0 -> null
-            1 -> luaToKotlin(luaState, 1)
-            else -> {
-                for (i in 1..returnCount) {
-                    val returnValue = luaToKotlin(luaState, i)
-                    returnValues.add(returnValue)
+        val result =
+            when (val returnCount = lua.lua_gettop(luaState)) {
+                0 -> null
+                1 -> luaToKotlin(luaState, 1)
+                else -> {
+                    for (i in 1..returnCount) {
+                        val returnValue = luaToKotlin(luaState, i)
+                        returnValues.add(returnValue)
+                    }
+                    returnValues.toTypedArray()
                 }
-                returnValues.toTypedArray()
             }
-        }
 
         lua.lua_settop(luaState, 0)
         return result
@@ -186,4 +187,3 @@ actual open class LuaEngine {
         lua.lua_close(luaState)
     }
 }
-

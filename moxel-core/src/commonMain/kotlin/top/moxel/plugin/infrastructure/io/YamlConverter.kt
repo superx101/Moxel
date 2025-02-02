@@ -28,7 +28,7 @@ class YamlConverter {
     }
 
     private fun visit(node: YamlNode) {
-        when(node) {
+        when (node) {
             is YamlScalar -> visitScalar(node)
             is YamlMap -> visitMap(node)
             is YamlList -> visitList(node)

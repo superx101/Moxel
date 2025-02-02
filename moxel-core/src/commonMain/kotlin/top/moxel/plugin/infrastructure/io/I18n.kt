@@ -12,9 +12,7 @@ import top.moxel.plugin.infrastructure.io.I18nContainer.addLanguageByYaml
 object I18nContainer {
     private val languageMap = mutableMapOf<String, MutableMap<String, String>>()
 
-    fun getValue(langCode: String, key: String): String {
-        return languageMap[langCode]?.get(key) as String
-    }
+    fun getValue(langCode: String, key: String): String = languageMap[langCode]?.get(key) as String
 
     fun addLanguage(langCode: String, i18nMap: Map<String, String>) {
         val mutableMap = languageMap[langCode] ?: mutableMapOf()

@@ -2,7 +2,7 @@ package infrastructure
 
 import kotlin.test.Test
 
-class LuaEngineJvmTest : LuaEngineTest() {
+class LuaEngineTestJvm : LuaEngineTest() {
     @Test
     override fun bindingTest() {
         super.commonBindingTest()

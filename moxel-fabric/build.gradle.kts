@@ -3,7 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ksp)
     alias(libs.plugins.fabric.loom)
-//	id("maven-publish")
+// 	id("maven-publish")
 }
 
 version = project.extra["fabric_mod_version"] as String
@@ -11,12 +11,11 @@ group = project.extra["maven_group"] as String
 
 base {
     archivesName.set(
-        "moxel-fabric-${version}"
+        "moxel-fabric-$version",
     )
 }
 
 repositories {
-
 }
 
 dependencies {
@@ -58,13 +57,13 @@ tasks.jar {
     }
 }
 
-//publishing {
-//	publications {
-//		create<MavenPublication>("mavenJava") {
-//			artifactId = project.the<BasePluginExtension>().archivesName.get()
-//			from(components["java"])
-//		}
-//	}
+// publishing {
+// 	publications {
+// 		create<MavenPublication>("mavenJava") {
+// 			artifactId = project.the<BasePluginExtension>().archivesName.get()
+// 			from(components["java"])
+// 		}
+// 	}
 //
-//	repositories {}
-//}
+// 	repositories {}
+// }

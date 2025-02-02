@@ -7,21 +7,21 @@ expect class LuaCFunctionRef
 
 data class LuaLibFunction(
     val name: String,
-    val luaCFunctionRef: LuaCFunctionRef
+    val luaCFunctionRef: LuaCFunctionRef,
 )
 
 data class LuaLib(
     val name: String,
     val luaLibFunctions: List<LuaLibFunction>,
-    val isGlobal: Boolean = false
+    val isGlobal: Boolean = false,
 )
 
 data class LuaEngineId(
     val type: LuaEngineType,
-    val id: String
+    val id: String,
 )
 
-expect open class LuaEngine() {
+expect open class LuaEngine constructor() {
     /**
      * set a set of functions to a table
      */
@@ -45,6 +45,7 @@ expect open class LuaEngine() {
 
     companion object {
         fun buildLuaFunctions(bindingList: List<LuaBinding>): List<LuaLibFunction>
+
         fun disposeLibs(libs: List<LuaLib>)
     }
 }

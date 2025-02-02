@@ -18,8 +18,6 @@ kotlin {
                 implementation(libs.ksp.api)
                 implementation(libs.kotlinpoet)
             }
-            kotlin.srcDir("src/main/kotlin")
-            resources.srcDir("src/main/resources")
         }
     }
 }

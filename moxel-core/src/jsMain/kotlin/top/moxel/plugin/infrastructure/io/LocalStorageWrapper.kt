@@ -2,7 +2,7 @@ package top.moxel.plugin.infrastructure.io
 
 import kotlinx.browser.localStorage
 import org.khronos.webgl.Uint8Array
-import top.moxel.plugin.infrastructure.NonFatalException
+import top.moxel.plugin.infrastructure.WarningException
 
 object LocalStorageWrapper {
     private val maxSize = 4 * 1024 * 1024 // 4MB
@@ -36,14 +36,16 @@ object LocalStorageWrapper {
      */
     fun load(key: String): String? {
         val segmentMetadata = localStorage.getItem(key)
-        if (segmentMetadata == null || !segmentMetadata.startsWith("@Segment:"))
+        if (segmentMetadata == null || !segmentMetadata.startsWith("@Segment:")) {
             return segmentMetadata
+        }
 
         val segmentCount = segmentMetadata.removePrefix("@Segment:").toInt()
         val segments = mutableListOf<String>()
         for (i in 0 until segmentCount) {
-            val segment = localStorage.getItem("${i}_$key")
-                ?: throw NonFatalException("Failed to load segment: $i")
+            val segment =
+                localStorage.getItem("${i}_$key")
+                    ?: throw WarningException("Failed to load segment: $i")
             segments.add(segment)
         }
         return segments.joinToString("")

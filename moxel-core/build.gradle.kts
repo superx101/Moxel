@@ -44,7 +44,7 @@ kotlin {
 
     listOf(
         mingwX64("mingw"),
-        linuxArm64("androidNative")
+        linuxArm64("androidNative"),
     ).forEach {
         it.apply {
             binaries {
@@ -114,14 +114,14 @@ kotlin {
 
     targets.withType<KotlinNativeTarget> {
         compilations["main"].cinterops.create("lua") {
-                val resourceFile = project.file("src/nativeMain/resources").absolutePath
-                val includePath = file("${resourceFile}/lua/include").absolutePath
-                val libPath = file("${resourceFile}/lua").absolutePath
+            val resourceFile = project.file("src/nativeMain/resources").absolutePath
+            val includePath = file("$resourceFile/lua/include").absolutePath
+            val libPath = file("$resourceFile/lua").absolutePath
 
-                defFile("${resourceFile}/cinterop/lua.def")
-                compilerOpts("-I${resourceFile}")
-                includeDirs.allHeaders(includePath)
-                extraOpts("-libraryPath", libPath)
+            defFile("$resourceFile/cinterop/lua.def")
+            compilerOpts("-I$resourceFile")
+            includeDirs.allHeaders(includePath)
+            extraOpts("-libraryPath", libPath)
         }
     }
 }

@@ -4,7 +4,7 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import okio.Path
 import org.koin.core.annotation.Single
 import org.koin.core.component.KoinComponent
-import top.moxel.plugin.infrastructure.NonFatalException
+import top.moxel.plugin.infrastructure.WarningException
 import java.io.File
 import java.net.URLClassLoader
 import java.util.jar.JarFile
@@ -22,7 +22,8 @@ actual open class NativeExtensionLoader : ExtensionLoader, KoinComponent {
 
         try {
             val url = jarFile.toURI().toURL()
-            val classLoader = URLClassLoader(arrayOf(url), NativeExtensionLoader::class.java.classLoader)
+            val classLoader =
+                URLClassLoader(arrayOf(url), NativeExtensionLoader::class.java.classLoader)
 
             // Read the main class from the JAR manifest
             val jar = JarFile(jarFile)
@@ -36,13 +37,13 @@ actual open class NativeExtensionLoader : ExtensionLoader, KoinComponent {
                 mainMethod.invoke(null, arrayOf<String>())
                 logger.debug {
                     "Successfully executed the main class: $mainClassName from " +
-                            "$jarFile"
+                        "$jarFile"
                 }
             } else {
-                throw NonFatalException("Main-Class not found in JAR manifest.")
+                throw WarningException("Main-Class not found in JAR manifest.")
             }
         } catch (e: Exception) {
-            throw NonFatalException("Error loading or executing class from $jarFile: ${e.message}")
+            throw WarningException("Error loading or executing class from $jarFile: ${e.message}")
         }
     }
 
