@@ -6,9 +6,8 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import top.moxel.plugin.annotation.lua.LuaEngineType
 import top.moxel.plugin.annotation.lua.LuaLibFunction
-import top.moxel.plugin.infrastructure.environment.Environment
+import top.moxel.plugin.infrastructure.environment.PathStorage
 import top.moxel.plugin.infrastructure.io.I18nContainer.addLanguageByYaml
-
 
 object I18nContainer {
     private val languageMap = mutableMapOf<String, MutableMap<String, String>>()
@@ -46,10 +45,9 @@ object I18nContainer {
     }
 }
 
-
 @Single
 class I18nFileLoader : KoinComponent {
-    private val env by inject<Environment>()
+    private val pathStorage by inject<PathStorage>()
 
     private fun loadFile(path: Path) {
         val text = VirtualFile(path).loadText()
@@ -58,7 +56,7 @@ class I18nFileLoader : KoinComponent {
     }
 
     fun loadFiles() {
-        val languagesDirPath = env.dataRoot.resolve("language")
+        val languagesDirPath = pathStorage.language
         val files = VirtualFile(languagesDirPath).listFiles()
         files.forEach {
             loadFile(it.path)
