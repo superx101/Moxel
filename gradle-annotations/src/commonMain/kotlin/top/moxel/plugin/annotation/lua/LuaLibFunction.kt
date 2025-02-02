@@ -12,11 +12,6 @@ data class LuaLibDeclaration(
     val bindings: List<LuaBinding>
 )
 
-//object LuaEngineType {
-//    const val EXTENSION = "extension"
-//    const val SCRIPT = "script"
-//}
-
 enum class LuaEngineType {
     EXTENSION,
     SCRIPT

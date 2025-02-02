@@ -63,7 +63,7 @@ class LuaEngineManager {
     private val engineMap = mutableMapOf<LuaEngineId, LuaEngine>()
     private val libsMap = mutableMapOf<LuaEngineType, MutableList<LuaLib>>()
 
-    init {
+    fun registerKspLib() {
         LuaBindingList.list.forEach {
             registerLib(it)
         }

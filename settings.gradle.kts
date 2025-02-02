@@ -25,7 +25,7 @@ plugins {
 
 rootProject.name = "Moxel"
 
-include("moxel-core")
-include("moxel-fabric")
 include("gradle-tools")
 include("gradle-annotations")
+include("moxel-core")
+include("moxel-fabric")

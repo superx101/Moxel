@@ -22,7 +22,7 @@ kotlin {
         freeCompilerArgs.add("-Xexpect-actual-classes")
     }
 
-    jvmToolchain(19)
+    jvmToolchain(21)
     jvm()
 
     js(IR) {
@@ -54,6 +54,8 @@ kotlin {
             }
         }
     }
+
+    applyDefaultHierarchyTemplate()
 
     sourceSets {
         val commonMain by getting {
@@ -90,11 +92,12 @@ kotlin {
 
         val jsMain by getting {
             dependencies {
+                implementation(devNpm("node-polyfill-webpack-plugin", "^2.0.1"))
                 implementation(npm("fengari-web", "0.1.4"))
             }
         }
 
-        val nativeMain by creating {
+        val nativeMain by getting {
             dependsOn(commonMain)
         }
         val mingwMain by getting {

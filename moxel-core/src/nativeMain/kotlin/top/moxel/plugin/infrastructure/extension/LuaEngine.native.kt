@@ -142,6 +142,8 @@ actual open class LuaEngine {
             lua_settop(luaState, 0)
             lua_createtable(luaState, 0, 0)
             lua_setglobal(luaState, lib.name)
+
+            lua_getglobal(luaState, lib.name)
         }
         // set functions
         for (luaLibFun in lib.luaLibFunctions) {

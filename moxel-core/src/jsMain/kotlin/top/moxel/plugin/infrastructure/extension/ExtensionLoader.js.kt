@@ -14,7 +14,7 @@ actual open class NativeExtensionLoader : ExtensionLoader, KoinComponent {
     actual override fun load(path: Path) {
         try {
             val code = VirtualFile(path).loadText()
-            js(code)
+            eval(code)
             logger.info { "Extension $path loaded successfully" }
         } catch (e: Exception) {
             throw NonFatalException("Error loading extension $path: $e")

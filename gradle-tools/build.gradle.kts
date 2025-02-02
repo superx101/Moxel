@@ -5,6 +5,7 @@ plugins {
 group = "top.moxel.plugin.tool"
 
 kotlin {
+    jvmToolchain(21)
     jvm {
         withJava()
     }

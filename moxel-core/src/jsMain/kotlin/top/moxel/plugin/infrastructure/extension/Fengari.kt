@@ -52,7 +52,7 @@ external object lua {
 
 external object lauxlib {
     fun luaL_newstate(): LuaState
-    fun luaL_loadstring(L: LuaState, s: Any): Int
+    fun luaL_dostring(L: LuaState, s: Any): Int
 }
 
 external object lualib {

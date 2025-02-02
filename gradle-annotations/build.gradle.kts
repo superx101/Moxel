@@ -5,6 +5,7 @@ plugins {
 group = "top.moxel.plugin.annotation"
 
 kotlin {
+    jvmToolchain(21)
     jvm()
 
     js(IR) {
