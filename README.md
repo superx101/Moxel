@@ -1,14 +1,14 @@
 <div align="center">
     <div>
-      <img src="docs/assets/logo@2.75x.png"
+      <img src="assets/logo5@3x.png"
             alt="logo" 
-            style="width: 250px; image-rendering: pixelated;"
+            style="width: 220px; image-rendering: pixelated;"
         />
     </div>
     <div>
-        <img src="docs/assets/subtitle.png"
+        <img src="assets/title.png"
             alt="logo" 
-            style="height: 30px;"
+            style="height: 90px;"
         />
     </div>
 </div>
@@ -21,6 +21,6 @@
 
 - forge
 - fabric
-- levilamina (mod edition, not plugin edition)
+- levilamina
 - browser (a structure editor developed with Unity Web)
 - other mod loader of bedrock-edition, if any exist
