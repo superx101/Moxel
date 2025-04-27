@@ -1,12 +1,12 @@
 <div align="center">
     <div>
-      <img src="assets/logo5@3x.png"
+      <img src="docs/assets/logo5@3x.png"
             alt="logo" 
             style="width: 220px; image-rendering: pixelated;"
         />
     </div>
     <div>
-        <img src="assets/title.png"
+        <img src="docs/assets/title.png"
             alt="logo" 
             style="height: 90px;"
         />
