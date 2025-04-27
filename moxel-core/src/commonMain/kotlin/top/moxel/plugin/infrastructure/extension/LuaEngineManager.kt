@@ -1,19 +1,20 @@
 package top.moxel.plugin.infrastructure.extension
 
-import org.koin.core.annotation.Single
+import top.moxel.plugin.annotation.di.Singleton
 import top.moxel.plugin.annotation.lua.LuaEngineType
 import top.moxel.plugin.annotation.lua.LuaLibDeclaration
-import top.moxel.plugin.ksp.generated.LuaBindingList
+// import top.moxel.plugin.ksp.generated.LuaBindingList
 
-@Single
+@Singleton
 class LuaEngineManager {
     private val engineMap = mutableMapOf<LuaEngineId, LuaEngine>()
     private val libsMap = mutableMapOf<LuaEngineType, MutableList<LuaLib>>()
 
     fun registerKspLib() {
-        LuaBindingList.list.forEach {
-            registerLib(it)
-        }
+        // TODO: refactor this
+//        LuaBindingList.list.forEach {
+//            registerLib(it)
+//        }
     }
 
     fun registerLib(definition: LuaLibDeclaration) {

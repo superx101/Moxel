@@ -5,13 +5,11 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import top.moxel.plugin.infrastructure.DI;
 
 @Mixin(MinecraftServer.class)
 public class ExampleMixin {
 	@Inject(at = @At("HEAD"), method = "loadWorld")
 	private void init(CallbackInfo info) {
-		DI.INSTANCE.startApplication();
 		// This code is injected into the start of MinecraftServer.loadWorld()V
 	}
 }

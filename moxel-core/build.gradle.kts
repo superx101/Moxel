@@ -11,11 +11,8 @@ plugins {
  *  |-- js
  *  |-- jvm
  *  '-- native
- *      |-- mingw (mingwX64)
- *      '-- androidNative (androidNativeArm64 or linuxArm64)
- *
- *  androidNativeArm64 third-party library not fully supported, use linuxArm64 replace temporarily
- *  (koin-annotations)
+ *      |-- mingw
+ *      '-- androidNative
  */
 kotlin {
     compilerOptions {
@@ -44,7 +41,7 @@ kotlin {
 
     listOf(
         mingwX64("mingw"),
-        linuxArm64("androidNative"),
+        androidNativeArm64("androidNative"),
     ).forEach {
         it.apply {
             binaries {
@@ -60,22 +57,19 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation(project(":gradle-annotations"))
+                api(project(":gradle-annotations"))
 
                 implementation(libs.kotlin.stdlib)
-                implementation(libs.kotlin.logging.common)
+                api(libs.kotlin.logging.common)
 
-                implementation(libs.kotlinx.coroutines.core)
-
-                implementation(project.dependencies.platform(libs.koin.bom))
-                implementation(libs.koin.core)
-                api(libs.koin.annotations)
+                api(libs.kotlinx.coroutines.core)
+                api(libs.kotlinx.atomicfu)
 
                 implementation(libs.log4j.api)
                 implementation(libs.logback.classic)
 
                 implementation(libs.kaml)
-                implementation(libs.okio)
+                api(libs.okio)
             }
         }
         val commonTest by getting {
@@ -128,11 +122,22 @@ kotlin {
 
 // KSP Tasks
 dependencies {
-    add("kspCommonMainMetadata", libs.koin.ksp.compiler)
     add("kspCommonMainMetadata", project(":gradle-tools"))
+//    add("kspJvm", project(":gradle-tools"))
+}
+
+ksp {
+    arg("module", "core")
+    arg("package", "top.moxel.plugin.ksp.generated")
 }
 
 tasks.register<Copy>("copyLuaDynamicLib") {
     from(project.file("src/nativeMain/resources/lua/lua52.dll"))
     into(project.file("build/bin/mingw/debugTest"))
+}
+
+tasks.register("generateKspCode") {
+    group = "codegen"
+    description = "Manually run KSP to generate code"
+    dependsOn("kspCommonMainKotlinMetadata")
 }

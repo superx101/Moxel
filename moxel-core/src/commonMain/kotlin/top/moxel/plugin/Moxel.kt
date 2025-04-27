@@ -2,14 +2,13 @@ package top.moxel.plugin
 
 import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.coroutines.coroutineScope
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
+import top.moxel.plugin.infrastructure.di.inject
 import top.moxel.plugin.infrastructure.extension.ExtensionLoaderFactory
 import top.moxel.plugin.infrastructure.extension.ExtensionType
 import top.moxel.plugin.infrastructure.io.I18nFileLoader
 import top.moxel.plugin.infrastructure.io.LoggingConfiguration
 
-class Moxel : KoinComponent {
+object Moxel {
     private val logger = KotlinLogging.logger {}
     private val i18nFileLoader by inject<I18nFileLoader>()
     private val extensionLoaderFactory by inject<ExtensionLoaderFactory>()

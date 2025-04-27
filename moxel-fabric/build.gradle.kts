@@ -28,12 +28,12 @@ dependencies {
     modImplementation(libs.fabric.api)
     modImplementation(libs.fabric.kotlin)
 
-    implementation(libs.kotlinx.coroutines.core)
-    implementation(project.dependencies.platform(libs.koin.bom))
-//    implementation(libs.koin.core)
-    implementation(libs.koin.annotations.jvm)
-
-    implementation(libs.okio)
+    implementation(project(":gradle-annotations"))
+    annotationProcessor(libs.kotlinpoet)
+    implementation(libs.kotlinpoet)
+    ksp(project(":gradle-tools")) {
+        exclude(group = "com.squareup", module = "kotlinpoet")
+    }
 }
 
 tasks.processResources {
@@ -47,14 +47,20 @@ tasks.processResources {
 java {
     withSourcesJar()
 
-    sourceCompatibility = JavaVersion.VERSION_21
-    targetCompatibility = JavaVersion.VERSION_21
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(21))
+    }
 }
 
 tasks.jar {
     from("LICENSE") {
         rename { "${it}_${project.the<BasePluginExtension>().archivesName.get()}" }
     }
+}
+
+ksp {
+    arg("module", "fabric")
+    arg("package", "top.moxel.plugin.ksp.generated")
 }
 
 // publishing {

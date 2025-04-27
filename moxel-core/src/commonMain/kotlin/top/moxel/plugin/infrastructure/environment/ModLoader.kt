@@ -1,8 +1,8 @@
 package top.moxel.plugin.infrastructure.environment
 
-import top.moxel.plugin.infrastructure.SingleClass
+import top.moxel.plugin.annotation.di.ExpectedComponent
 
-@SingleClass
+@ExpectedComponent
 interface ModLoader {
     val name: String
     val target: PlatformTarget

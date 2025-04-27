@@ -2,20 +2,11 @@ package top.moxel.plugin.annotation.lua
 
 import io.github.oshai.kotlinlogging.KotlinLogging
 
-typealias LuaBindingFunction = (Array<Any?>) -> Any?
-
-data class LuaBinding(val name: String, val function: LuaBindingFunction)
-
 data class LuaLibDeclaration(
     val type: LuaEngineType,
     val group: String,
     val bindings: List<LuaBinding>,
 )
-
-enum class LuaEngineType {
-    EXTENSION,
-    SCRIPT,
-}
 
 /**
  * auto generate Lua bindings list

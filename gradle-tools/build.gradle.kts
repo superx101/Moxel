@@ -13,7 +13,7 @@ kotlin {
     sourceSets {
         val jvmMain by getting {
             dependencies {
-                implementation(project(":gradle-annotations"))
+                api(project(":gradle-annotations"))
 
                 implementation(libs.ksp.api)
                 implementation(libs.kotlinpoet)

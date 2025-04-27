@@ -2,12 +2,11 @@ package top.moxel.plugin.infrastructure.extension
 
 import io.github.oshai.kotlinlogging.KotlinLogging
 import okio.Path
-import org.koin.core.annotation.Single
-import org.koin.core.component.KoinComponent
+import top.moxel.plugin.annotation.di.Singleton
 import top.moxel.plugin.infrastructure.io.VirtualFile
 
-@Single
-actual open class NativeExtensionLoader : ExtensionLoader, KoinComponent {
+@Singleton
+actual open class NativeExtensionLoader : ExtensionLoader {
     private val logger = KotlinLogging.logger {}
 
     actual override fun load(path: Path) {

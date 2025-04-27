@@ -1,11 +1,10 @@
 package top.moxel.plugin.infrastructure.environment
 
-import org.koin.core.annotation.Single
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
+import top.moxel.plugin.annotation.di.Singleton
+import top.moxel.plugin.infrastructure.di.inject
 
-@Single
-class PathStorage : KoinComponent {
+@Singleton
+class PathStorage {
     private val env by inject<Environment>()
 
     val extension = env.dataRoot.resolve("extension")

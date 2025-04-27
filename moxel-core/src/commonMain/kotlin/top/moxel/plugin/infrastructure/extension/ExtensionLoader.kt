@@ -2,10 +2,9 @@ package top.moxel.plugin.infrastructure.extension
 
 import io.github.oshai.kotlinlogging.KotlinLogging
 import okio.Path
-import org.koin.core.annotation.Single
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
+import top.moxel.plugin.annotation.di.Singleton
 import top.moxel.plugin.annotation.lua.LuaEngineType
+import top.moxel.plugin.infrastructure.di.inject
 import top.moxel.plugin.infrastructure.environment.PathStorage
 import top.moxel.plugin.infrastructure.io.VirtualFile
 
@@ -31,10 +30,9 @@ interface ExtensionLoader {
     fun freeAll()
 }
 
-@Single
-expect class NativeExtensionLoader :
-    ExtensionLoader,
-    KoinComponent {
+@Singleton
+expect class NativeExtensionLoader() :
+    ExtensionLoader {
     override fun loadAll()
 
     override fun load(path: Path)
@@ -57,8 +55,8 @@ internal fun NativeExtensionLoader.commonLoadAll(suffix: String) {
     }
 }
 
-@Single
-class LuaExtensionLoader : ExtensionLoader, KoinComponent {
+@Singleton
+class LuaExtensionLoader : ExtensionLoader {
     private val manager by inject<LuaEngineManager>()
     private val pathStorage by inject<PathStorage>()
     private val logger = KotlinLogging.logger {}

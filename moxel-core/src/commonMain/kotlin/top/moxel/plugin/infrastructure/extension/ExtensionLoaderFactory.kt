@@ -1,12 +1,11 @@
 package top.moxel.plugin.infrastructure.extension
 
-import org.koin.core.annotation.Single
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
+import top.moxel.plugin.annotation.di.Singleton
 import top.moxel.plugin.infrastructure.common.AbstractFactory
+import top.moxel.plugin.infrastructure.di.inject
 
-@Single
-class ExtensionLoaderFactory : AbstractFactory<ExtensionType, ExtensionLoader>, KoinComponent {
+@Singleton
+class ExtensionLoaderFactory : AbstractFactory<ExtensionType, ExtensionLoader> {
     private val nativeLoader by inject<NativeExtensionLoader>()
     private val luaLoader by inject<LuaExtensionLoader>()
 

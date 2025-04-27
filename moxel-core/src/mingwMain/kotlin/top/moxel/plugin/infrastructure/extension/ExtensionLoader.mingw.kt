@@ -3,15 +3,14 @@ package top.moxel.plugin.infrastructure.extension
 import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.cinterop.*
 import okio.Path
-import org.koin.core.annotation.Single
-import org.koin.core.component.KoinComponent
 import platform.windows.FreeLibrary
 import platform.windows.GetProcAddress
 import platform.windows.HMODULE
 import platform.windows.LoadLibraryW
+import top.moxel.plugin.annotation.di.Singleton
 
-@Single
-actual open class NativeExtensionLoader : ExtensionLoader, KoinComponent {
+@Singleton
+actual open class NativeExtensionLoader : ExtensionLoader {
     private val logger = KotlinLogging.logger {}
 
     @OptIn(ExperimentalForeignApi::class)

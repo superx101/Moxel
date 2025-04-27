@@ -1,9 +1,9 @@
 package top.moxel.plugin.infrastructure.environment
 
 import okio.Path
-import top.moxel.plugin.infrastructure.SingleClass
+import top.moxel.plugin.annotation.di.ExpectedComponent
 
-@SingleClass
+@ExpectedComponent
 interface Environment {
     val root: Path
     val dataRoot: Path

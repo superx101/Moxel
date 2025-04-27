@@ -1,9 +1,9 @@
 package top.moxel.plugin.infrastructure.environment
 
 import okio.Path
-import org.koin.core.annotation.Single
+import top.moxel.plugin.annotation.di.ActualComponent
 
-@Single
+@ActualComponent
 class FabricModLoader : ModLoader {
     override val name: String
         get() = "Fabric"
@@ -15,7 +15,7 @@ class FabricModLoader : ModLoader {
         get() = TODO("Not yet implemented")
 }
 
-@Single
+@ActualComponent
 class FabricEnvironment : Environment {
     override val root: Path
         get() = TODO("Not yet implemented")
