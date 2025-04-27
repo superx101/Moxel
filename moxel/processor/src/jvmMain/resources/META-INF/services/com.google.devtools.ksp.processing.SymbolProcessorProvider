@@ -1,0 +1,2 @@
+#top.moxel.plugin.processor.lua.LuaBindingProcessorProvider
+top.moxel.plugin.processor.di.DependencyComponentsProvider

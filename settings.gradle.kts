@@ -25,8 +25,14 @@ plugins {
 
 rootProject.name = "Moxel"
 
-include("gradle-tools")
-include("gradle-annotations")
+include("processor")
+include("annotations")
 include("moxel-core")
 include("moxel-fabric")
-include("moxel-test-platform")
+include("moxel-algorithmic-test")
+
+project(":moxel-core").projectDir = file("moxel/core")
+project(":moxel-fabric").projectDir = file("moxel/fabric")
+project(":moxel-algorithmic-test").projectDir = file("moxel/test")
+project(":annotations").projectDir = file("moxel/annotations")
+project(":processor").projectDir = file("moxel/processor")

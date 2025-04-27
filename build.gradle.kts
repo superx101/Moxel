@@ -4,8 +4,6 @@ plugins {
     alias(libs.plugins.ktlint)
 }
 
-group = "top.moxel.plugin"
-
 buildscript {
     dependencies {
         classpath(libs.kotlin.gradle.plugin)
@@ -24,4 +22,8 @@ subprojects {
             include("**/kotlin/**")
         }
     }
+}
+
+allprojects {
+    group = "top.moxel.plugin"
 }
